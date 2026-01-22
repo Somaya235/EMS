@@ -1,159 +1,149 @@
-/* ================================
-DATABASE
-================================ */
-CREATE DATABASE campus_events;
+-- =======================
+-- USERS
+-- =======================
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
--- PostgreSQL
--- \c campus_events;
--- MySQL
--- USE campus_events;
-/* ================================
-USERS
-================================ */
-CREATE TABLE
-    users (
-        id BIGSERIAL PRIMARY KEY,
-        full_name VARCHAR(100) NOT NULL,
-        email VARCHAR(120) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
-        role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'USER')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+-- =======================
+-- ROLES
+-- =======================
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
 
-/* ================================
-EVENTS
-================================ */
-CREATE TABLE
-    events (
-        id BIGSERIAL PRIMARY KEY,
-        title VARCHAR(150) NOT NULL,
-        description TEXT,
-        event_date TIMESTAMP NOT NULL,
-        location VARCHAR(150),
-        status VARCHAR(20) NOT NULL CHECK (status IN ('UPCOMING', 'LIVE', 'FINISHED')),
-        created_by BIGINT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT fk_event_creator FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE SET NULL
-    );
+INSERT INTO roles (name) VALUES
+('super_admin'),
+('activity_president'),
+('web_manager'),
+('activity_director'),
+('committee_head'),
+('committee_member'),
+('member');
 
-/* ================================
-POLLS
-================================ */
-CREATE TABLE
-    polls (
-        id BIGSERIAL PRIMARY KEY,
-        event_id BIGINT NOT NULL,
-        question VARCHAR(255) NOT NULL,
-        is_open BOOLEAN DEFAULT TRUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT fk_poll_event FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
-    );
 
-/* ================================
-POLL OPTIONS
-================================ */
-CREATE TABLE
-    poll_options (
-        id BIGSERIAL PRIMARY KEY,
-        poll_id BIGINT NOT NULL,
-        option_text VARCHAR(200) NOT NULL,
-        CONSTRAINT fk_option_poll FOREIGN KEY (poll_id) REFERENCES polls (id) ON DELETE CASCADE
-    );
+-- =======================
+-- STUDENT ACTIVITIES
+-- =======================
+CREATE TABLE student_activities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL UNIQUE,
+    description TEXT,
+    category VARCHAR(150) NOT NULL,
+    -- Each activity has ONE web manager
+    president_id INTEGER UNIQUE REFERENCES users(id),
 
-/* ================================
-VOTES
-================================ */
-CREATE TABLE
-    votes (
-        id BIGSERIAL PRIMARY KEY,
-        user_id BIGINT NOT NULL,
-        poll_id BIGINT NOT NULL,
-        option_id BIGINT NOT NULL,
-        voted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT fk_vote_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-        CONSTRAINT fk_vote_poll FOREIGN KEY (poll_id) REFERENCES polls (id) ON DELETE CASCADE,
-        CONSTRAINT fk_vote_option FOREIGN KEY (option_id) REFERENCES poll_options (id) ON DELETE CASCADE,
-        CONSTRAINT unique_user_poll UNIQUE (user_id, poll_id)
-    );
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-/* ================================
-INDEXES (PERFORMANCE)
-================================ */
-CREATE INDEX idx_event_status ON events (status);
 
-CREATE INDEX idx_event_date ON events (event_date);
+-- =======================
+-- STUDENT ACTIVITY DIRECTORS (M:N)
+-- =======================
+CREATE TABLE activity_directors (
+    activity_id INTEGER REFERENCES student_activities(id),
+    activity_director_id INTEGER REFERENCES users(id),
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(activity_id, activity_director_id)
+);
 
-CREATE INDEX idx_poll_event ON polls (event_id);
+-- =======================
+-- COMMITTEES
+-- =======================
+CREATE TABLE committees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    stu_activity_id INTEGER NOT NULL REFERENCES student_activities(id),
 
-CREATE INDEX idx_vote_poll ON votes (poll_id);
+    -- Director manages many committees (1:M)
+    director_id INTEGER REFERENCES users(id),
 
-CREATE INDEX idx_vote_option ON votes (option_id);
+    -- Committee Head (1:1)
+    head_id INTEGER UNIQUE REFERENCES users(id),
 
-/* ================================
-SAMPLE DATA (OPTIONAL)
-================================ */
--- Admin
-INSERT INTO
-    users (full_name, email, password, role)
-VALUES
-    (
-        'Admin User',
-        'admin@campus.com',
-        'hashed_password',
-        'ADMIN'
-    );
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(stu_activity_id, name)
+);
 
--- Students
-INSERT INTO
-    users (full_name, email, password, role)
-VALUES
-    (
-        'Ali Hassan',
-        'ali@student.com',
-        'hashed_password',
-        'USER'
-    ),
-    (
-        'Mona Ahmed',
-        'mona@student.com',
-        'hashed_password',
-        'USER'
-    );
+-- =======================
+-- COMMITTEE MEMBERS (M:N)
+-- =======================
+CREATE TABLE committee_members (
+    committee_id INTEGER REFERENCES committees(id),
+    committee_member INTEGER REFERENCES users(id),
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(committee_id, committee_member)
+);
 
--- Event
-INSERT INTO
-    events (
-        title,
-        description,
-        event_date,
-        location,
-        status,
-        created_by
-    )
-VALUES
-    (
-        'Tech Day 2026',
-        'Annual technology event',
-        '2026-03-10 10:00:00',
-        'Main Hall',
-        'LIVE',
-        1
-    );
+-- =======================
+-- EVENTS
+-- =======================
+CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
 
--- Poll
-INSERT INTO
-    polls (event_id, question)
-VALUES
-    (1, 'Best Speaker?');
+    stu_activity_id INTEGER NOT NULL REFERENCES student_activities(id),
+    committee_id INTEGER REFERENCES committees(id),
 
--- Poll Options
-INSERT INTO
-    poll_options (poll_id, option_text)
-VALUES
-    (1, 'Dr. Ahmed'),
-    (1, 'Eng. Sara'),
-    (1, 'Prof. Omar');
+    start_at TIMESTAMP,
+    end_at TIMESTAMP,
 
-/* ================================
-END OF SCRIPT
-================================ */
+    created_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =======================
+-- POLLS
+-- =======================
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER NOT NULL REFERENCES events(id),
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    is_public BOOLEAN DEFAULT TRUE,
+    start_at TIMESTAMP,
+    end_at TIMESTAMP,
+    created_by INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE poll_options (
+    id SERIAL PRIMARY KEY,
+    poll_id INTEGER NOT NULL REFERENCES polls(id),
+    option_text VARCHAR(300) NOT NULL
+);
+
+CREATE TABLE votes (
+    id SERIAL PRIMARY KEY,
+    option_id INTEGER NOT NULL REFERENCES poll_options(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    voted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(option_id, user_id)
+);
+
+-- =======================
+-- OTP & Refresh Token
+-- =======================
+
+CREATE TABLE refresh_tokens (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    token TEXT UNIQUE NOT NULL,
+    expiry TIMESTAMP NOT NULL
+);
+
+CREATE TABLE otp_codes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    code VARCHAR(6) NOT NULL,
+    expiry TIMESTAMP NOT NULL,
+    verified BOOLEAN DEFAULT FALSE
+);
+

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.example.EMS_backend.models.PollOption;
 
 @Repository
-public interface pollOptionRepository extends JpaRepository<PollOption, Long> {
-    List<PollOption> findByPollId(Long pollId);
+public interface PollOptionRepository extends JpaRepository<PollOption, Long> {
+  List<PollOption> findByPollId(Long pollId);
 }

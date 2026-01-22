@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.EMS_backend.models.Event;
 @Repository
+
 public interface EventRepository extends JpaRepository<Event, Long> {
-    List<Event> findByStatus(String status);
+  List<Event> findByStuActivityId(Long activityId);
+  List<Event> findByCommitteeId(Long committeeId);
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import com.example.EMS_backend.models.Poll;
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long> {
-    List<Poll> findByEventId(Long eventId);
+  List<Poll> findByEventId(Long eventId);
 }
