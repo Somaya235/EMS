@@ -18,7 +18,5 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public List<Event> getLiveEvents() {
-        return eventRepository.findByStatus("LIVE");
-    }
+
 }

@@ -31,15 +31,5 @@ public class VoteController {
     @Autowired
     private PollOptionService pollOptionService;
 
-    @PostMapping
-    public Vote vote(@RequestParam String email,
-            @RequestParam Long pollId,
-            @RequestParam Long optionId) {
 
-        User user = userService.findByEmail(email);
-        Poll poll = pollService.findById(pollId);
-        PollOption option = pollOptionService.findById(optionId);
-
-        return voteService.castVote(user, poll, option);
-    }
 }

@@ -1,12 +1,21 @@
 package com.example.EMS_backend.models;
-import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -44,4 +53,9 @@ public class Committee {
     inverseJoinColumns=@JoinColumn(name="committee_member")
   )
   private Set<User> members = new HashSet<>();
+
+  // Explicit getter for compilation compatibility
+  public Long getId() {
+    return id;
+  }
 }
