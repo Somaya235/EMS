@@ -1,6 +1,7 @@
 package com.example.EMS_backend.controllers;
 
 
+import graphql.com.google.common.base.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ import com.example.EMS_backend.services.UserService;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
- 
+
 
     @Autowired
     private UserService userService;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/{email}")
-    public User getByEmail(@PathVariable String email) {
+    public Optional<User> getByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
     }
 }

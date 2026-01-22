@@ -10,5 +10,6 @@ import com.example.EMS_backend.models.User;
 import graphql.com.google.common.base.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-   public User findByEmail(String email);
+  Optional<User> findByEmail(String email);
+  boolean existsByEmail(String email);
 }

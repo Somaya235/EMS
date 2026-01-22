@@ -1,4 +1,5 @@
 package com.example.EMS_backend.services;
+import com.example.EMS_backend.repositories.PollOptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -9,7 +10,7 @@ import com.example.EMS_backend.models.PollOption;
 public class PollOptionService {
 
     @Autowired
-    private pollOptionRepository pollOptionRepository;
+    private PollOptionRepository pollOptionRepository;
 
     public PollOption createOption(PollOption option) {
         return pollOptionRepository.save(option);
