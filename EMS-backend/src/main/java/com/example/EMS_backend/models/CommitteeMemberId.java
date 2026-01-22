@@ -1,9 +1,11 @@
 package com.example.EMS_backend.models;
 
 
-import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class CommitteeMemberId implements Serializable {
@@ -36,6 +38,21 @@ public class CommitteeMemberId implements Serializable {
     return Objects.hash(committeeId, committeeMemberId);
   }
 
-  // getters & setters
+  // Getters and Setters
+  public Long getCommitteeId() {
+    return committeeId;
+  }
+
+  public void setCommitteeId(Long committeeId) {
+    this.committeeId = committeeId;
+  }
+
+  public Long getCommitteeMemberId() {
+    return committeeMemberId;
+  }
+
+  public void setCommitteeMemberId(Long committeeMemberId) {
+    this.committeeMemberId = committeeMemberId;
+  }
 }
 

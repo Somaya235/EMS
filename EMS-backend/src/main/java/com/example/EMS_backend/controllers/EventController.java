@@ -26,8 +26,5 @@ public class EventController {
         return eventService.create(event);
     }
 
-    @GetMapping("/live")
-    public List<Event> getLive() {
-        return eventService.getLiveEvents();
-    }
+
 }

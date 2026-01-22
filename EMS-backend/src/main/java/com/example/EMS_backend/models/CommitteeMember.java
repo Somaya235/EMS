@@ -2,9 +2,18 @@ package com.example.EMS_backend.models;
 
 
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import com.example.EMS_backend.models.CommitteeMemberId;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import lombok.Getter;
+
+@Getter
 
 @Entity
 @Table(name = "committee_members")
@@ -34,5 +43,36 @@ public class CommitteeMember {
     this.id = new CommitteeMemberId(committee.getId(), member.getId());
   }
 
-  // getters & setters
+  // Getters and Setters
+  public CommitteeMemberId getId() {
+    return id;
+  }
+
+  public void setId(CommitteeMemberId id) {
+    this.id = id;
+  }
+
+  public Committee getCommittee() {
+    return committee;
+  }
+
+  public void setCommittee(Committee committee) {
+    this.committee = committee;
+  }
+
+  public User getMember() {
+    return member;
+  }
+
+  public void setMember(User member) {
+    this.member = member;
+  }
+
+  public LocalDateTime getJoinedAt() {
+    return joinedAt;
+  }
+
+  public void setJoinedAt(LocalDateTime joinedAt) {
+    this.joinedAt = joinedAt;
+  }
 }
