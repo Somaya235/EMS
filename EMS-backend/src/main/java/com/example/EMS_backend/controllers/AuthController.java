@@ -22,7 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
- 
+
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -53,7 +53,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
         try {
-            System.out.println("Registering user: " + signUpRequest);  
+            System.out.println("Registering user: " + signUpRequest);
             User user = authService.registerUser(signUpRequest);
             return ResponseEntity.ok(new MessageResponse("User registered successfully! Please check your email for OTP verification."));
         } catch (Exception e) {

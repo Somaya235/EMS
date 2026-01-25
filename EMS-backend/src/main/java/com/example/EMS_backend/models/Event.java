@@ -3,6 +3,7 @@ package com.example.EMS_backend.models;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="events")
@@ -26,4 +27,21 @@ public class Event {
   @ManyToOne
   @JoinColumn(name="created_by")
   private User createdBy;
+
+  @Column(name="location")
+  private String location;
+
+  @Column(name="status")
+  private String status;
+
+  @ElementCollection
+  @CollectionTable(name="event_tags", joinColumns=@JoinColumn(name="event_id"))
+  @Column(name="tag")
+  private Set<String> tags;
+
+  @Column(name="banner_image")
+  private String bannerImage;
+
+  @Column(name="event_color")
+  private String eventColor;
 }
