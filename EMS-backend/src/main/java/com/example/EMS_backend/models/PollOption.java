@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="poll_options")
 public class PollOption {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   private String optionText;

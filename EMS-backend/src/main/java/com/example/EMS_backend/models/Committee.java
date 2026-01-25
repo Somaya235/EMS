@@ -23,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name="committees")
-public class Committee {
+public class Committee extends AuditableEntity {
 
   @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;

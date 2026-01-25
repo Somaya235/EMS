@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "refresh_tokens")
 public class RefreshToken {
   @Id 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)

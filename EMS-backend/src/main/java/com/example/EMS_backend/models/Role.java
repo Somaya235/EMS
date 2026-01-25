@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Table(name="roles")
 public class Role {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   @Column(unique=true, nullable=false)

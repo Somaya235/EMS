@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="student_activities")
-public class StudentActivity {
+public class StudentActivity extends AuditableEntity {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   private String name;

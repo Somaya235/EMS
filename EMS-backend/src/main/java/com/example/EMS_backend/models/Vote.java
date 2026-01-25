@@ -15,7 +15,7 @@ import jakarta.persistence.UniqueConstraint;
 @Table(name="votes",
   uniqueConstraints=@UniqueConstraint(columnNames={"option_id","user_id"}))
 public class Vote {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   @ManyToOne @JoinColumn(name="option_id")

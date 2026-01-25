@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="polls")
-public class Poll {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Poll extends AuditableEntity {
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   private String title;
