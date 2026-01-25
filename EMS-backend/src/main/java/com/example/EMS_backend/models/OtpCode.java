@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "otp_codes")
 public class OtpCode {
-  @Id 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)

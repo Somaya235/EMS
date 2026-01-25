@@ -7,8 +7,8 @@ import java.util.Set;
 
 @Entity
 @Table(name="events")
-public class Event {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class  Event {
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   private String title;

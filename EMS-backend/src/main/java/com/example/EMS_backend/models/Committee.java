@@ -25,7 +25,7 @@ import lombok.Setter;
 @Table(name="committees")
 public class Committee {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   private String name;
