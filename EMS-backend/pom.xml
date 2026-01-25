@@ -111,14 +111,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-=======
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
->>>>>>> 98d1192c07e7409e2a397fb1b819efe078655bb7
-  </dependencies>
 
 	<build>
 		<plugins>

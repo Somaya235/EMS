@@ -1,11 +1,10 @@
 package com.example.EMS_backend.models;
 
-<<<<<<< HEAD
-=======
+import java.util.Set;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
->>>>>>> 98d1192c07e7409e2a397fb1b819efe078655bb7
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,10 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-<<<<<<< HEAD
-=======
-import java.util.Set;
->>>>>>> 98d1192c07e7409e2a397fb1b819efe078655bb7
 
 @Entity
 @Table(name="polls")
@@ -33,23 +28,9 @@ public class Poll {
   @Column(name="tag")
   private Set<String> tags;
 
->>>>>>> 98d1192c07e7409e2a397fb1b819efe078655bb7
-=======
   @ManyToOne
   @JoinColumn(name="event_id")
   private Event event;
-
-  @ElementCollection
-  @CollectionTable(name="poll_tags", joinColumns=@JoinColumn(name="poll_id"))
-  @Column(name="tag")
-  private Set<String> tags;
-=======
-  @ElementCollection
-  @CollectionTable(name="poll_tags", joinColumns=@JoinColumn(name="poll_id"))
-  @Column(name="tag")
-  private Set<String> tags;
-
->>>>>>> 98d1192c07e7409e2a397fb1b819efe078655bb7
   // Getters and Setters
   public Long getId() {
     return id;
