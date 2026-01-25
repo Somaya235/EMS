@@ -1,5 +1,6 @@
 package com.example.EMS_backend.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +34,24 @@ public class User {
 
   @Column(name="enabled", nullable=false)
   private Boolean enabled = false;
+
+  @Column(name="grade")
+  private String grade;
+
+  @Column(name="phone_number", unique=true)
+  private String phoneNumber;
+
+  @Column(name="national_number", unique=true)
+  private String nationalNumber;
+
+  @Column(name="date_of_birth")
+  private LocalDate dateOfBirth;
+
+  @Column(name="cv_attachment")
+  private String cvAttachment;
+
+  @Column(name="profile_image")
+  private String profileImage;
 
   private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -100,5 +119,53 @@ public class User {
 
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public String getGrade() {
+    return grade;
+  }
+
+  public void setGrade(String grade) {
+    this.grade = grade;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getNationalNumber() {
+    return nationalNumber;
+  }
+
+  public void setNationalNumber(String nationalNumber) {
+    this.nationalNumber = nationalNumber;
+  }
+
+  public LocalDate getDateOfBirth() {
+    return dateOfBirth;
+  }
+
+  public void setDateOfBirth(LocalDate dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
+
+  public String getCvAttachment() {
+    return cvAttachment;
+  }
+
+  public void setCvAttachment(String cvAttachment) {
+    this.cvAttachment = cvAttachment;
+  }
+
+  public String getProfileImage() {
+    return profileImage;
+  }
+
+  public void setProfileImage(String profileImage) {
+    this.profileImage = profileImage;
   }
 }

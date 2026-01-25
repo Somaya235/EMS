@@ -1,5 +1,8 @@
 package com.example.EMS_backend.models;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Table(name="polls")
@@ -21,6 +25,11 @@ public class Poll {
   @ManyToOne
   @JoinColumn(name="event_id")
   private Event event;
+
+  @ElementCollection
+  @CollectionTable(name="poll_tags", joinColumns=@JoinColumn(name="poll_id"))
+  @Column(name="tag")
+  private Set<String> tags;
 
   // Getters and Setters
   public Long getId() {
