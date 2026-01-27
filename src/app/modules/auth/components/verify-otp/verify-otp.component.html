@@ -1,0 +1,56 @@
+<div class="verify-otp-container">
+  <div class="verify-otp-card">
+    <h2>Verify OTP</h2>
+    <p class="instruction">Please enter the 6-digit OTP sent to your email</p>
+    
+    <form [formGroup]="verifyOtpForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          readonly
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="otp">OTP Code</label>
+        <input
+          type="text"
+          id="otp"
+          formControlName="otp"
+          [ngClass]="{ 'is-invalid': submitted && f['otp'].errors }"
+          class="form-control"
+          placeholder="Enter 6-digit code"
+          maxlength="6"
+        />
+        <div *ngIf="submitted && f['otp'].errors" class="invalid-feedback">
+          <div *ngIf="f['otp'].errors['required']">OTP is required</div>
+          <div *ngIf="f['otp'].errors['pattern']">OTP must be 6 digits</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" [disabled]="loading" class="btn btn-primary">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
+          Verify OTP
+        </button>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger mt-3">
+        {{ error }}
+      </div>
+    </form>
+
+    <div class="otp-actions">
+      <button type="button" (click)="resendOtp()" class="btn btn-link">
+        Resend OTP
+      </button>
+      <a routerLink="/auth/login" class="btn btn-link">
+        Back to Login
+      </a>
+    </div>
+  </div>
+</div>

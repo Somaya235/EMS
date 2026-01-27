@@ -1,0 +1,9 @@
+<div *ngIf="isVisible" class="error-message" [class]="getAlertClass()">
+  <div class="error-content">
+    <i *ngIf="showIcon" class="error-icon" [ngClass]="getIconClass()"></i>
+    <span class="error-text">{{ message }}</span>
+  </div>
+  <button *ngIf="dismissible" class="error-close" (click)="dismiss()">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
