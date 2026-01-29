@@ -13,13 +13,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class User extends AuditableEntity {
 
-  @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+  @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
   private Long id;
 
   @Column(name="full_name", nullable=false)

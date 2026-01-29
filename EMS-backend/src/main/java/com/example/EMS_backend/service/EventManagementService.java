@@ -1,5 +1,6 @@
 package com.example.EMS_backend.service;
 
+import com.example.EMS_backend.exceptions.ResourceNotFoundException;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.models.Event;
 import com.example.EMS_backend.repositories.EventRepository;
@@ -34,7 +35,7 @@ public class EventManagementService {
         return auditService.executeWithAudit(currentUserId, () -> {
             // Verify user exists
             User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User", currentUserId));
 
             // Create and save event
             Event event = new Event();
@@ -65,7 +66,7 @@ public class EventManagementService {
     public Event updateEvent(Long currentUserId, Long eventId, String newTitle) {
         return auditService.executeWithAudit(currentUserId, () -> {
             Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event", eventId));
 
             String oldTitle = event.getTitle();
             event.setTitle(newTitle);
@@ -91,7 +92,7 @@ public class EventManagementService {
     public void deleteEvent(Long currentUserId, Long eventId) {
         auditService.executeWithAudit(currentUserId, () -> {
             Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event", eventId));
 
             eventRepository.delete(event);
 

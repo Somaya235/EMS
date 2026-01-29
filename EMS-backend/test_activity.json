@@ -1,0 +1,130 @@
+{
+    "info": {
+      "name": "EMS Backend – Registration, OTP & Student Activity",
+      "_postman_id": "a3f5c7b0-1111-2222-3333-ems-student-activity",
+      "description": "Test user registration + OTP flow, then create a student activity with president assignment.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "1 - Register User (Signup)",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"fullName\": \"Test Super Admin\",\n  \"email\": \"{{test_email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/auth/signup",
+            "host": ["{{base_url}}"],
+            "path": ["auth", "signup"]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "2 - Verify OTP",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"otp\": \"{{otp_code}}\"\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/auth/verify-otp",
+            "host": ["{{base_url}}"],
+            "path": ["auth", "verify-otp"]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "3 - Sign in (get JWT)",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/auth/signin",
+            "host": ["{{base_url}}"],
+            "path": ["auth", "signin"]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "if (pm.response.code === 200) {",
+                "  var json = pm.response.json();",
+                "  if (json && json.token) {",
+                "    pm.environment.set('jwt_token', json.token);",
+                "    console.log('JWT token saved to environment as jwt_token');",
+                "  } else {",
+                "    console.warn('No token field in response body');",
+                "  }",
+                "} else {",
+                "  console.warn('Signin failed with status', pm.response.code);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "4 - Create Student Activity (Super Admin only)",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "Authorization", "value": "Bearer {{jwt_token}}", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Robotics Club\",\n  \"category\": \"Technical\",\n  \"description\": \"Robotics and automation activities\",\n  \"presidentId\": 1\n}"
+          },
+          "url": {
+            "raw": "{{base_url}}/admin/student-activities",
+            "host": ["{{base_url}}"],
+            "path": ["admin", "student-activities"]
+          }
+        },
+        "response": []
+      }
+    ],
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8080/api"
+      },
+      {
+        "key": "test_email",
+        "value": "student@example.com"
+      },
+      {
+        "key": "test_password",
+        "value": "Password123!"
+      },
+      {
+        "key": "otp_code",
+        "value": ""
+      },
+      {
+        "key": "jwt_token",
+        "value": ""
+      }
+    ]
+  }

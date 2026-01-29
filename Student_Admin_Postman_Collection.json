@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "a9d7b4c6-e91e-4b6e-8c8f-2f7b8d0a0b2d",
+		"name": "Student Admin - US-SA-08",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_collection_id": "27012586-2703-4813-9111-e40d04c0892c"
+	},
+	"item": [
+		{
+			"name": "Admin: Get All Students",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{super_admin_jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/admin/students",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin: Get Student Profile by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{super_admin_jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/admin/students/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"admin",
+						"students",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c92a6c1e-9a1d-4f1b-8d1e-8e4a9e1d8a1c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "e2f8b5f3-5c8e-4b7e-9f0e-3e9a0f7e8b5f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "0d6a2f7c-5e9a-4c1b-8d3e-1e0f2d4c6a8b",
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"id": "1b3d5e7f-9a1c-4e3b-8d5f-2a0e4c6b8d0a",
+			"key": "super_admin_jwt",
+			"value": "YOUR_SUPER_ADMIN_JWT_TOKEN",
+			"type": "string"
+		}
+	]
+}

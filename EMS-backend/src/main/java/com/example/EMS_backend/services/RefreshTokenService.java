@@ -30,18 +30,21 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
+    @Transactional
     public RefreshToken createRefreshToken(Long userId) {
-        RefreshToken refreshToken = new RefreshToken();
-        
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        
+
+        // Reuse existing refresh token row if it exists (avoid unique user_id violation)
+        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+                .orElseGet(RefreshToken::new);
+
         refreshToken.setUser(user);
         refreshToken.setToken(UUID.randomUUID().toString());
-        
+
         LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshTokenDurationMs / 1000);
         refreshToken.setExpiryDate(expiryDate);
-        
+
         return refreshTokenRepository.save(refreshToken);
     }
 
@@ -55,6 +58,6 @@ public class RefreshTokenService {
 
     @Transactional
     public void deleteByUserId(Long userId) {
-        refreshTokenRepository.deleteByUserId(userId);
+        userRepository.findById(userId).ifPresent(user -> refreshTokenRepository.deleteByUser(user));
     }
 }

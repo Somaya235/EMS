@@ -60,6 +60,17 @@ public class AuthService {
     @Transactional
     public User registerUser(RegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            // If user exists but is not yet verified, resend OTP instead of blocking registration
+            User existingUser = userRepository.findByEmail(registerRequest.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (Boolean.FALSE.equals(existingUser.getEnabled())) {
+                // Clear any old OTPs and send a new one
+                resendOtp(registerRequest.getEmail());
+                return existingUser;
+            }
+
+            // Already verified → email really in use
             throw new RuntimeException("Email is already in use!");
         }
 

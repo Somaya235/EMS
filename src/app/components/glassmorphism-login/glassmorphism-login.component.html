@@ -1,0 +1,109 @@
+<div class="login-container">
+  <!-- Background Image -->
+  <div class="background-image"></div>
+  
+  <!-- Glass Effect Container -->
+  <div class="glass-container">
+    <!-- Glass Card -->
+    <div class="glass-card">
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="rgba(255, 255, 255, 0.2)" stroke="rgba(255, 255, 255, 0.5)" stroke-width="2"/>
+          <text x="50" y="65" text-anchor="middle" fill="white" font-size="40" font-weight="bold">L</text>
+        </svg>
+      </div>
+
+      <!-- Welcome Heading -->
+      <h1 class="welcome-heading">Welcome Back</h1>
+
+      <!-- Sign Up Link -->
+      <div class="signup-text">
+        <span>Don't have an account? </span>
+        <a href="#" class="signup-link" (click)="onSignUpClick(); $event.preventDefault()">Sign up</a>
+      </div>
+
+      <!-- Form -->
+      <form class="login-form" (ngSubmit)="onSubmit($event)">
+        <!-- Username Input -->
+        <div class="input-group">
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              [(ngModel)]="username"
+              class="glass-input" 
+              placeholder="Username"
+              aria-label="Username"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              name="password" 
+              [(ngModel)]="password"
+              class="glass-input password-input" 
+              placeholder="Password"
+              aria-label="Password"
+              required
+            />
+            <button 
+              type="button" 
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              aria-label="Toggle password visibility"
+            >
+              <svg *ngIf="!showPassword" class="toggle-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+              <svg *ngIf="showPassword" class="toggle-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="remember-me">
+          <label class="checkbox-container">
+            <input type="checkbox" [(ngModel)]="rememberMe" class="checkbox-input">
+            <span class="checkbox-checkmark"></span>
+            <span class="checkbox-label">Remember me</span>
+          </label>
+        </div>
+
+        <!-- Sign In Button -->
+        <button type="submit" class="signin-button" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Sign In</span>
+          <span *ngIf="isLoading" class="loading-spinner">
+            <svg class="spinner" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            Signing in...
+          </span>
+        </button>
+      </form>
+
+      <!-- Forgot Password Link -->
+      <div class="forgot-password">
+        <a href="#" class="forgot-link" (click)="onForgotPasswordClick(); $event.preventDefault()">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+</div>

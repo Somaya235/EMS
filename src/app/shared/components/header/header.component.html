@@ -1,0 +1,67 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="header-brand">
+      <a routerLink="/admin/dashboard" class="brand-logo">
+        <i class="fas fa-calendar-alt"></i>
+        <span>EMS</span>
+      </a>
+    </div>
+
+    <nav class="header-nav">
+      <a routerLink="/events" class="nav-link" routerLinkActive="active">
+        <i class="fas fa-calendar"></i>
+        Events
+      </a>
+      <a routerLink="/committees" class="nav-link" routerLinkActive="active">
+        <i class="fas fa-users-cog"></i>
+        Committees
+      </a>
+      <a *ngIf="isAdmin()" routerLink="/admin/dashboard" class="nav-link" routerLinkActive="active">
+        <i class="fas fa-cog"></i>
+        Admin
+      </a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="user-dropdown" [class.open]="isDropdownOpen">
+        <button class="user-button" (click)="toggleDropdown()">
+          <div class="user-avatar">
+            <span>{{ getInitials() }}</span>
+          </div>
+          <span class="user-name">{{ getFullName() }}</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <div class="dropdown-menu" *ngIf="isDropdownOpen">
+          <div class="dropdown-header">
+            <div class="user-info">
+              <strong>{{ getFullName() }}</strong>
+              <small>{{ currentUser?.email }}</small>
+            </div>
+          </div>
+          
+          <div class="dropdown-divider"></div>
+          
+          <a class="dropdown-item" (click)="navigateToProfile()">
+            <i class="fas fa-user"></i>
+            My Profile
+          </a>
+          
+          <a *ngIf="isAdmin()" class="dropdown-item" (click)="navigateToSettings()">
+            <i class="fas fa-cog"></i>
+            Settings
+          </a>
+          
+          <div class="dropdown-divider"></div>
+          
+          <a class="dropdown-item logout" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="dropdown-overlay" *ngIf="isDropdownOpen" (click)="closeDropdown()"></div>
