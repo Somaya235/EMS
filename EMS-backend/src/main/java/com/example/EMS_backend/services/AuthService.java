@@ -130,24 +130,28 @@ public class AuthService {
     }
 
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-        return new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getFullName(),
-                userDetails.getAuthorities().stream()
-                        .map(item -> item.getAuthority())
-                        .collect(java.util.stream.Collectors.toList()));
+            return new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getFullName(),
+                    userDetails.getAuthorities().stream()
+                            .map(item -> item.getAuthority())
+                            .collect(java.util.stream.Collectors.toList()));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public String resendOtp(String email) {

@@ -40,4 +40,39 @@ public class EmailService {
         
         mailSender.send(message);
     }
+
+    public void sendPasswordResetEmail(String toEmail, String fullName, String resetToken, String baseUrl) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject("EMS - Password Reset Request");
+        
+        String resetLink = baseUrl + "/reset-password?token=" + resetToken;
+        
+        message.setText("Dear " + fullName + ",\n\n" +
+                "We received a request to reset your password for your EMS account.\n\n" +
+                "Click the link below to reset your password:\n" +
+                resetLink + "\n\n" +
+                "This link will expire in 15 minutes for security reasons.\n" +
+                "If you didn't request this password reset, please ignore this email.\n\n" +
+                "Best regards,\n" +
+                "EMS Team");
+        
+        mailSender.send(message);
+    }
+
+    public void sendPasswordResetConfirmation(String toEmail, String fullName) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject("EMS - Password Reset Successful");
+        message.setText("Dear " + fullName + ",\n\n" +
+                "Your password has been successfully reset!\n" +
+                "You can now login to your account with your new password.\n\n" +
+                "If you didn't make this change, please contact our support team immediately.\n\n" +
+                "Best regards,\n" +
+                "EMS Team");
+        
+        mailSender.send(message);
+    }
 }

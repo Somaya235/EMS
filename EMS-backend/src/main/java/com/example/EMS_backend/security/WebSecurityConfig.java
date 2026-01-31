@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/reset-password").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated());
 
