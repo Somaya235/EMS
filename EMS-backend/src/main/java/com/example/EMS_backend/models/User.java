@@ -40,6 +40,9 @@ public class User extends AuditableEntity {
   @Column(name="grade")
   private String grade;
 
+  @Column(name="major")
+  private String major;
+
   @Column(name="phone_number", unique=true)
   private String phoneNumber;
 
@@ -121,6 +124,14 @@ public class User extends AuditableEntity {
 
   public void setGrade(String grade) {
     this.grade = grade;
+  }
+
+  public String getMajor() {
+    return major;
+  }
+
+  public void setMajor(String major) {
+    this.major = major;
   }
 
   public String getPhoneNumber() {

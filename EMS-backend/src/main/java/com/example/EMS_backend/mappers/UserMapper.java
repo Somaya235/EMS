@@ -24,7 +24,7 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", source = "updatedAt")
     // MapStruct will map fields with matching names automatically (e.g., email, grade, cvAttachment, profileImage).
     // We explicitly map "major" from the underlying "grade" field to satisfy the student profile requirements.
-    @Mapping(target = "major", source = "grade")
+    @Mapping(target = "major", source = "major")
     UserResponseDTO toResponseDTO(User user);
     
     /**
