@@ -187,7 +187,8 @@ public class GlobalExceptionHandler {
             ActivityAlreadyExistsException.class,
             PresidentAlreadyAssignedException.class,
             RoleNotFoundException.class,
-            UnauthorizedOperationException.class
+            UnauthorizedOperationException.class,
+            ActivityNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleDomainExceptions(
             BaseException ex,

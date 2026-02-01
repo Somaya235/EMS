@@ -10,6 +10,9 @@ public class RegisterRequest {
     @Size(min = 2, max = 100, message = "Full name must be between 2 and 100 characters")
     private String fullName;
     
+    @Size(max = 255, message = "Major must not exceed 255 characters")
+    private String major;
+    
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
@@ -24,6 +27,14 @@ public class RegisterRequest {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
     }
 
     public String getEmail() {

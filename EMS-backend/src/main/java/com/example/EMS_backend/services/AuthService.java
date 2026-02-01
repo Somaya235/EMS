@@ -78,6 +78,7 @@ public class AuthService {
         user.setFullName(registerRequest.getFullName());
         user.setEmail(registerRequest.getEmail());
         user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setMajor(registerRequest.getMajor());
         user.setEnabled(false);
 
         Role memberRole = roleRepository.findByName("member")
