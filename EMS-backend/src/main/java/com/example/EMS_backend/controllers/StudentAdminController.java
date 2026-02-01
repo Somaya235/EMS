@@ -1,7 +1,6 @@
 package com.example.EMS_backend.controllers;
 
 import com.example.EMS_backend.dto.UserResponseDTO;
-import com.example.EMS_backend.exceptions.UserNotFoundException;
 import com.example.EMS_backend.mappers.UserMapper;
 import com.example.EMS_backend.models.Role;
 import com.example.EMS_backend.models.User;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,26 +52,6 @@ public class StudentAdminController {
 
         List<UserResponseDTO> response = userMapper.toResponseDTOList(students);
         return ResponseEntity.ok(response);
-    }
-
-    /**
-     * Get full profile details for a specific student.
-     *
-     * GET /admin/students/{id}
-     */
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('super_admin')")
-    public ResponseEntity<UserResponseDTO> getStudentProfile(@PathVariable Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-
-        // Ensure this user is an enabled student
-        if (!Boolean.TRUE.equals(user.getEnabled()) || !hasStudentRole(user)) {
-            throw new UserNotFoundException(id);
-        }
-
-        UserResponseDTO responseDTO = userMapper.toResponseDTO(user);
-        return ResponseEntity.ok(responseDTO);
     }
 
     private boolean hasStudentRole(User user) {

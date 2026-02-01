@@ -140,7 +140,7 @@ public class AuthController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        try {
+         try {
             passwordResetService.resetPassword(request);
             return ResponseEntity.ok(new MessageResponse("Password reset successfully"));
         } catch (Exception e) {
