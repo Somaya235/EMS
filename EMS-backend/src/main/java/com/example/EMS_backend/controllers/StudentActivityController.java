@@ -84,7 +84,7 @@ public class StudentActivityController {
      * PUT /student-activities/{activityId}/directors
      */
     @PutMapping("/{activityId}/directors")
-    @PreAuthorize("hasAuthority('super_admin')")
+    @PreAuthorize("hasAuthority('activity_president')")
     public ResponseEntity<ActivityDirectorResponseDTO> assignActivityDirector(
             @PathVariable Long activityId,
             @Valid @RequestBody ActivityDirectorRequestDTO requestDTO) {
