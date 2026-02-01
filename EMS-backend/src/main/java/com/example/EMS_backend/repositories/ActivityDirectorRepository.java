@@ -13,4 +13,5 @@ public interface ActivityDirectorRepository
   extends JpaRepository<ActivityDirector, ActivityDirectorId> {
   
   List<ActivityDirector> findByDirector(User director);
+  List<ActivityDirector> findByActivityId(Long activityId);
 }

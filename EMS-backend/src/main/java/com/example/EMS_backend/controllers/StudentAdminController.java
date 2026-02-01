@@ -2,7 +2,6 @@ package com.example.EMS_backend.controllers;
 
 import com.example.EMS_backend.dto.UserResponseDTO;
 import com.example.EMS_backend.mappers.UserMapper;
-import com.example.EMS_backend.models.Role;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/students")
 public class StudentAdminController {
 
-    private static final String STUDENT_ROLE_NAME = "member";
-
     @Autowired
     private UserRepository userRepository;
 
@@ -34,7 +31,7 @@ public class StudentAdminController {
     private UserMapper userMapper;
 
     /**
-     * Get a list of all student users.
+     * Get a list of all users.
      *
      * GET /admin/students
      */
@@ -43,24 +40,13 @@ public class StudentAdminController {
     public ResponseEntity<List<UserResponseDTO>> getAllStudents() {
         List<User> allUsers = userRepository.findAll();
 
-        List<User> students = allUsers.stream()
+        List<User> enabledUsers = allUsers.stream()
                 // Only enabled users
                 .filter(user -> Boolean.TRUE.equals(user.getEnabled()))
-                // Only users that have the "member" role (treated as students)
-                .filter(this::hasStudentRole)
                 .collect(Collectors.toList());
 
-        List<UserResponseDTO> response = userMapper.toResponseDTOList(students);
+        List<UserResponseDTO> response = userMapper.toResponseDTOList(enabledUsers);
         return ResponseEntity.ok(response);
-    }
-
-    private boolean hasStudentRole(User user) {
-        if (user.getRoles() == null) {
-            return false;
-        }
-        return user.getRoles().stream()
-                .map(Role::getName)
-                .anyMatch(STUDENT_ROLE_NAME::equals);
     }
 }
 

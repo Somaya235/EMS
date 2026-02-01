@@ -7,6 +7,12 @@ import com.example.EMS_backend.dto.UserResponseDTO;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.security.UserDetailsImpl;
 import com.example.EMS_backend.services.CommitteeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +25,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/committees")
+@Tag(name = "Committees", description = "APIs for managing committees and committee members")
+@SecurityRequirement(name = "Bearer Authentication")
 public class CommitteeController {
 
     @Autowired
@@ -32,7 +40,15 @@ public class CommitteeController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('activity_president')")
-    public ResponseEntity<CommitteeResponseDTO> createCommittee(@Valid @RequestBody CommitteeRequestDTO requestDTO) {
+    @Operation(summary = "Create committee", description = "Create a new committee. Only activity presidents can create committees.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully created committee"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - Only activity presidents can create committees")
+    })
+    public ResponseEntity<CommitteeResponseDTO> createCommittee(
+            @Parameter(description = "Committee creation details") @Valid @RequestBody CommitteeRequestDTO requestDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long currentUserId = userDetails.getId();
@@ -49,9 +65,17 @@ public class CommitteeController {
      */
     @PutMapping("/{committeeId}/head")
     @PreAuthorize("hasAuthority('activity_president')")
+    @Operation(summary = "Assign committee head", description = "Assign a committee head. Only activity presidents can assign committee heads.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully assigned committee head"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - Only activity presidents can assign committee heads"),
+        @ApiResponse(responseCode = "404", description = "Committee not found")
+    })
     public ResponseEntity<CommitteeResponseDTO> assignCommitteeHead(
-            @PathVariable Long committeeId,
-            @RequestBody Long headUserId) {
+            @Parameter(description = "ID of the committee") @PathVariable Long committeeId,
+            @Parameter(description = "User ID of the committee head") @RequestBody Long headUserId) {
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -69,9 +93,17 @@ public class CommitteeController {
      */
     @PutMapping("/{committeeId}/director")
     @PreAuthorize("hasAuthority('activity_president')")
+    @Operation(summary = "Assign committee director", description = "Assign a committee director. Only activity presidents can assign committee directors.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully assigned committee director"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - Only activity presidents can assign committee directors"),
+        @ApiResponse(responseCode = "404", description = "Committee not found")
+    })
     public ResponseEntity<CommitteeResponseDTO> assignCommitteeDirector(
-            @PathVariable Long committeeId,
-            @RequestBody Long directorUserId) {
+            @Parameter(description = "ID of the committee") @PathVariable Long committeeId,
+            @Parameter(description = "User ID of the committee director") @RequestBody Long directorUserId) {
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

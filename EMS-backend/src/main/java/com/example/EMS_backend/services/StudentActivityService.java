@@ -136,6 +136,17 @@ public class StudentActivityService {
     }
 
     /**
+     * Get all directors for a specific student activity.
+     */
+    public List<ActivityDirector> getDirectorsByActivity(Long activityId) {
+        // Verify activity exists
+        if (!studentActivityRepository.existsById(activityId)) {
+            throw new ActivityNotFoundException(activityId);
+        }
+        return activityDirectorRepository.findByActivityId(activityId);
+    }
+
+    /**
      * Assigns or updates an Activity Director for a specific Student Activity.
      * Only the president of the activity can perform this operation.
      *
