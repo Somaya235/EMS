@@ -30,7 +30,7 @@ import java.util.List;
  * Public and president-specific endpoints for student activities.
  */
 @RestController
-@RequestMapping("/student-activities")
+@RequestMapping("/api/student-activities")
 @Tag(name = "Student Activities", description = "APIs for managing and viewing student activities")
 @SecurityRequirement(name = "Bearer Authentication")
 public class StudentActivityController {

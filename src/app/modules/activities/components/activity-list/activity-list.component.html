@@ -1,0 +1,119 @@
+<app-header></app-header>
+
+<div class="activities-container">
+  <div class="activities-header">
+    <h1>Student Activities</h1>
+    <p>Discover and join exciting student activities</p>
+  </div>
+
+  <div class="activities-controls">
+    <div class="search-bar">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearchChange()"
+        placeholder="Search activities..."
+        class="search-input"
+      >
+    </div>
+    
+    <div class="controls-right">
+      <button class="add-activity-btn" (click)="openCreateDialog()" *ngIf="isSuperAdmin()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Activity
+      </button>
+      
+      <select [(ngModel)]="selectedCategory" (change)="onCategoryChange(selectedCategory)" class="category-filter">
+        <option value="all">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading activities...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Activities Grid -->
+  <div *ngIf="!loading && !error" class="activities-grid">
+    <div 
+      *ngFor="let activity of activities; let i = index" 
+      class="activity-card"
+      (click)="viewActivityDetails(activity.id)"
+    >
+      <!-- Colored Header Section -->
+      <div class="activity-header" [style.background-color]="getCategoryColor(activity.category)">
+        <div class="activity-category-badge">
+          {{ activity.category }}
+        </div>
+      </div>
+      
+      <!-- Content Section -->
+      <div class="activity-content">
+        <h3 class="activity-name">{{ activity.name }}</h3>
+        <p class="activity-description">{{ activity.description }}</p>
+        
+        <!-- Stats Section -->
+        <div class="activity-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ activity.memberCount || 0 }}</span>
+            <span class="stat-label">members</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-number">{{ activitiesCount }}</span>
+            <span class="stat-label">events</span>
+          </div>
+          
+          <!-- President Section -->
+          <div class="activity-president">
+            <div class="president-avatar">
+              {{ getPresidentInitials(getPresidentName(activity)) }}
+            </div>
+            <div class="president-info">
+              <span class="president-name">{{ getPresidentName(activity) }}</span>
+              <span class="president-role">President</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && activities.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </div>
+    <h3>No activities found</h3>
+  
+  </div>
+
+<!-- Create Activity Dialog -->
+<app-activity-create 
+  *ngIf="showCreateDialog"
+  (activityCreated)="onActivityCreated()"
+  (dialogClosed)="closeCreateDialog()">
+</app-activity-create>

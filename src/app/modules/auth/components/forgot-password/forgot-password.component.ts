@@ -23,7 +23,7 @@ export class ForgotPasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.forgotPasswordForm = this.formBuilder.group({
@@ -57,5 +57,9 @@ export class ForgotPasswordComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  goBackToLogin(): void {
+    this.router.navigate(['/auth/login']);
   }
 }

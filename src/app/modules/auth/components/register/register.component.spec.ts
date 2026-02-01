@@ -30,24 +30,65 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with empty fields', () => {
-    expect(component.registerForm.get('username')?.value).toBe('');
-    expect(component.registerForm.get('email')?.value).toBe('');
-    expect(component.registerForm.get('password')?.value).toBe('');
-    expect(component.registerForm.get('confirmPassword')?.value).toBe('');
-    expect(component.registerForm.get('firstName')?.value).toBe('');
-    expect(component.registerForm.get('lastName')?.value).toBe('');
+  it('should initialize stepper with step 1', () => {
+    expect(component.currentStep).toBe(1);
+    expect(component.totalSteps).toBe(3);
+    expect(component.getStepTitle()).toBe('Personal Information');
+  });
+
+  it('should navigate to next step when valid', () => {
+    // Set valid values for step 1
+    component.registerForm.get('fullName')?.setValue('Test User');
+    component.registerForm.get('email')?.setValue('test@example.com');
+
+    component.nextStep();
+
+    expect(component.currentStep).toBe(2);
+    expect(component.getStepTitle()).toBe('Account Security');
+  });
+
+  it('should not navigate to next step when invalid', () => {
+    // Keep step 1 invalid
+    component.nextStep();
+
+    expect(component.currentStep).toBe(1);
+  });
+
+  it('should navigate to previous step', () => {
+    component.currentStep = 2;
+    component.previousStep();
+
+    expect(component.currentStep).toBe(1);
+  });
+
+  it('should validate current step correctly', () => {
+    // Step 1 validation
+    component.registerForm.get('fullName')?.setValue('Test User');
+    component.registerForm.get('email')?.setValue('test@example.com');
+    expect(component.isCurrentStepValid()).toBeTruthy();
+
+    // Step 2 validation
+    component.currentStep = 2;
+    component.registerForm.get('password')?.setValue('password123');
+    component.registerForm.get('confirmPassword')?.setValue('password123');
+    component.registerForm.get('grade')?.setValue('10');
+    component.registerForm.get('phoneNumber')?.setValue('1234567890');
+    expect(component.isCurrentStepValid()).toBeTruthy();
   });
 
   it('should validate required fields', () => {
     const form = component.registerForm;
     form.setValue({
-      username: '',
+      fullName: '',
       email: '',
       password: '',
       confirmPassword: '',
-      firstName: '',
-      lastName: ''
+      grade: '',
+      phoneNumber: '',
+      nationalNumber: '',
+      dateOfBirth: '',
+      collageId: '',
+      roles: ['MEMBER']
     });
     expect(form.invalid).toBeTruthy();
   });
@@ -55,36 +96,48 @@ describe('RegisterComponent', () => {
   it('should validate password matching', () => {
     const form = component.registerForm;
     form.setValue({
-      username: 'testuser',
+      fullName: 'Test User',
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'different',
-      firstName: 'Test',
-      lastName: 'User'
+      grade: '10',
+      phoneNumber: '1234567890',
+      nationalNumber: '1234567890123',
+      dateOfBirth: '2000-01-01',
+      collageId: 'COL001',
+      roles: ['USER']
     });
     expect(form.invalid).toBeTruthy();
     expect(form.get('confirmPassword')?.errors?.['mustMatch']).toBeTruthy();
   });
 
   it('should call authService.register on form submit', () => {
-    const form = component.registerForm;
-    form.setValue({
-      username: 'testuser',
+    // Fill all form data
+    component.registerForm.setValue({
+      fullName: 'Test User',
       email: 'test@example.com',
       password: 'password123',
       confirmPassword: 'password123',
-      firstName: 'Test',
-      lastName: 'User'
+      grade: '10',
+      phoneNumber: '1234567890',
+      nationalNumber: '1234567890123',
+      dateOfBirth: '2000-01-01',
+      collageId: 'COL001',
+      roles: ['MEMBER']
     });
-    
+
     component.onSubmit();
-    
+
     expect(authServiceSpy.register).toHaveBeenCalledWith({
-      username: 'testuser',
+      fullName: 'Test User',
       email: 'test@example.com',
       password: 'password123',
-      firstName: 'Test',
-      lastName: 'User'
+      grade: 10,
+      phoneNumber: '1234567890',
+      nationalNumber: '1234567890123',
+      dateOfBirth: new Date('2000-01-01'),
+      collageId: 'COL001',
+      roles: ['MEMBER']
     });
   });
 });

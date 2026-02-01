@@ -1,11 +1,2 @@
-<div class="app-container">
-  <app-glassmorphism-login 
-    (onLogin)="onLogin($event)"
-    (onForgotPassword)="onForgotPassword()"
-    (onSignUp)="onSignUp()">
-  </app-glassmorphism-login>
-  
-  <div *ngIf="loginMessage" class="message-toast">
-    {{ loginMessage }}
-  </div>
-</div>
+
+<router-outlet></router-outlet>

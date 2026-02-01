@@ -1,19 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environments } from '../../../environments/environment';
+import { environments } from '../../../enviroments/enviroment';
+import { TokenStorageService } from './token-storage.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private apiUrl = environments.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tokenStorage: TokenStorageService
+  ) { }
 
   private getHeaders(): HttpHeaders {
-    const headers = new HttpHeaders({
+    const token = this.tokenStorage.getToken();
+
+    let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
     return headers;
   }
 

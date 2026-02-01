@@ -1,0 +1,94 @@
+<div class="activity-committees-section">
+  <div class="committees-header">
+    <h2 class="committees-title">Committees</h2>
+    <p class="committees-subtitle">Active committees for this activity</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading committees...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Committees Grid -->
+  <div *ngIf="!loading && !error" class="committees-grid">
+
+    <div 
+      *ngFor="let committee of committeesWithMemberCount; let i = index" 
+      class="committee-card"
+    >
+      <!-- Committee Header -->
+      <div class="committee-header" [style.background-color]="getCommitteeColor(i)">
+        <div class="committee-info">
+          <h3 class="committee-name">{{ committee.name || 'Unnamed Committee' }}</h3>
+          <p class="committee-description">{{ committee.description || 'No description available' }}</p>
+        </div>
+        <div class="member-count-badge">
+          <span class="member-count">{{ committee.memberCount || 0 }}</span>
+          <span class="member-label">members</span>
+        </div>
+      </div>
+
+      <!-- Committee Content -->
+      <div class="committee-content">
+        <!-- Committee Head -->
+        <div class="committee-head">
+          <div class="person-avatar" [style.background-color]="getAvatarColor(committee.head?.fullName || 'No Head')">
+            {{ getInitials(committee.head?.fullName || 'No Head') }}
+          </div>
+          <div class="person-info">
+            <span class="person-name">{{ committee.head?.fullName || 'No Head Assigned' }}</span>
+            <span class="person-role">Committee Head</span>
+          </div>
+        </div>
+
+        <!-- Committee Director -->
+        <div class="committee-director" *ngIf="committee.director">
+          <div class="person-avatar" [style.background-color]="getAvatarColor(committee.director.fullName || 'No Director')">
+            {{ getInitials(committee.director.fullName || 'No Director') }}
+          </div>
+          <div class="person-info">
+            <span class="person-name">{{ committee.director.fullName || 'No Director Assigned' }}</span>
+            <span class="person-role">Activity Director</span>
+          </div>
+        </div>
+
+        <!-- Committee Members (show count only for now) -->
+        <div class="committee-members-summary" *ngIf="committee.memberCount > 0">
+          <div class="members-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>{{ committee.memberCount }} member{{ committee.memberCount !== 1 ? 's' : '' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && committeesWithMemberCount.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </div>
+    <h3>No committees found</h3>
+    <p>This activity doesn't have any committees yet.</p>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+
+<app-header></app-header>
+
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading student profile...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Student Profile Content -->
+  <div *ngIf="!loading && !error" class="profile-content">
+    <ng-container *ngIf="student$ | async as student">
+      <div class="profile-card">
+        <!-- Profile Image and Basic Info -->
+        <div class="profile-main">
+          <div class="profile-avatar">
+            <img [src]="student.profileImage || 'assets/images/default-avatar.svg'" [alt]="student.fullName">
+          </div>
+          
+          <div class="profile-basic-info">
+            <h1>{{ student.fullName }}</h1>
+            <p class="student-email">{{ student.email }}</p>
+            <div class="profile-badges">
+              <span class="badge grade" *ngIf="student.grade">{{ student.grade }}</span>
+              <span class="badge major" *ngIf="student.major">{{ student.major }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Information -->
+        <div class="profile-details">
+          <div class="detail-section">
+            <h2>Contact Information</h2>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <label>Email</label>
+                <p>{{ student.email }}</p>
+              </div>
+              <div class="detail-item">
+                <label>Phone Number</label>
+                <p>{{ student.phoneNumber || 'Not provided' }}</p>
+              </div>
+              <div class="detail-item">
+                <label>National Number</label>
+                <p>{{ student.nationalNumber || 'Not provided' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h2>Academic Information</h2>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <label>Grade</label>
+                <p>{{ student.grade || 'Not provided' }}</p>
+              </div>
+              <div class="detail-item">
+                <label>College ID</label>
+                <p>{{ student.collageId || 'Not provided' }}</p>
+              </div>
+              <div class="detail-item">
+                <label>Date of Birth</label>
+                <p>{{ student.dateOfBirth ? (student.dateOfBirth | date:'longDate') : 'Not provided' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section" *ngIf="student.roles && student.roles.length > 0">
+            <h2>Roles</h2>
+            <div class="roles-list">
+              <span *ngFor="let role of student.roles" class="role-badge">{{ role }}</span>
+            </div>
+          </div>
+
+          <div class="detail-section" *ngIf="student.cvAttachment">
+            <h2>Documents</h2>
+            <div class="document-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+              <a [href]="student.cvAttachment" target="_blank" class="cv-link">View CV</a>
+            </div>
+          </div>
+
+          <div class="detail-section" *ngIf="student.createdAt">
+            <h2>Account Information</h2>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <label>Account Created</label>
+                <p>{{ student.createdAt | date:'longDate' }}</p>
+              </div>
+              <div class="detail-item">
+                <label>Last Updated</label>
+                <p>{{ student.updatedAt | date:'longDate' }}</p>
+              </div>
+              <div class="detail-item">
+                <label>Status</label>
+                <p [class]="student.enabled ? 'status-active' : 'status-inactive'">
+                  {{ student.enabled ? 'Active' : 'Inactive' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>

@@ -1,15 +1,17 @@
 export interface Role {
   id: number;
   name: string;
-  description?: string;
-  permissions?: string[];
+
   createdAt: Date;
   updatedAt: Date;
 }
 
 export enum RoleType {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  MODERATOR = 'MODERATOR',
-  ORGANIZER = 'ORGANIZER'
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  WEB_MANAGER = 'WEB_MANAGER',
+  PRESIDENT = 'PRESIDENT',
+  DIRECTOR = 'DIRECTOR',
+  COMMITTEE_HEAD = 'COMMITTEE_HEAD',
+  COMMITTEE_MEMBER = 'COMMITTEE_MEMBER',
+  MEMBER = 'MEMBER'
 }

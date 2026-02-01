@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../core/models/user.model';
+import { User } from '../../../../core/models';
 
 @Component({
   selector: 'app-user-management',
@@ -27,23 +27,21 @@ export class UserManagementComponent implements OnInit {
     this.users = [
       {
         id: 1,
-        username: 'admin',
+        fullName: 'Admin User',
         email: 'admin@example.com',
-        firstName: 'Admin',
-        lastName: 'User',
-        roles: [{ id: 1, name: 'ADMIN' }],
-        createdAt: new Date('2023-01-01'),
-        updatedAt: new Date('2023-01-01')
+        grade: 'Senior',
+        roles: ['ADMIN'],
+        createdAt: '2023-01-01',
+        updatedAt: '2023-01-01'
       },
       {
         id: 2,
-        username: 'user1',
+        fullName: 'Regular User',
         email: 'user1@example.com',
-        firstName: 'Regular',
-        lastName: 'User',
-        roles: [{ id: 2, name: 'USER' }],
-        createdAt: new Date('2023-01-15'),
-        updatedAt: new Date('2023-01-15')
+        grade: 'Junior',
+        roles: ['USER'],
+        createdAt: '2023-01-15',
+        updatedAt: '2023-01-15'
       }
     ];
     this.loading = false;

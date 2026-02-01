@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Endpoints are read-only by design.
  */
 @RestController
-@RequestMapping("/admin/students")
+@RequestMapping("/api/admin/students")
 public class StudentAdminController {
 
     @Autowired

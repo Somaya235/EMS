@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
  * Only users with ROLE_SUPER_ADMIN can access these endpoints.
  */
 @RestController
-@RequestMapping("/admin/student-activities")
+@RequestMapping("/api/admin/student-activities")
 @Tag(name = "Admin Student Activities", description = "Admin APIs for managing student activities")
 @SecurityRequirement(name = "Bearer Authentication")
 public class StudentActivityAdminController {

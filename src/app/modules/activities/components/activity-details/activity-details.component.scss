@@ -1,0 +1,363 @@
+.activity-details-container {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 2rem;
+}
+
+.activity-content {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Header Section */
+.activity-header {
+  background: #8b5cf6;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+
+  .header-left {
+    .activity-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .activity-meta {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      .category-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #8b5cf6;
+        text-transform: capitalize;
+        background: white;
+      }
+
+      .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+
+        &.active {
+          background: rgba(34, 197, 94, 0.3);
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+/* Main Content Layout */
+.activity-main {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+}
+
+/* Left Content Container */
+.content-left-container {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+}
+
+/* Left Content */
+.content-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f3f4f6;
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .activity-description {
+    color: #6b7280;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+}
+
+/* Right Sidebar */
+.content-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stats-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f3f4f6;
+
+  .stat-item {
+    text-align: center;
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+      color: #8b5cf6;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 40px;
+    background: #f3f4f6;
+  }
+}
+
+.president-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f3f4f6;
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .president-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .president-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .president-details {
+      flex: 1;
+
+      .president-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+      }
+
+      .president-role {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 0.75rem;
+      }
+
+      .contact-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        border: none;
+        border-radius: 8px;
+        color: #6b7280;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #e5e7eb;
+          color: #8b5cf6;
+        }
+      }
+    }
+  }
+}
+
+.actions-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+
+    &.primary {
+      background: #8b5cf6;
+      color: white;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+      }
+    }
+
+    &.secondary {
+      background: white;
+      color: #6b7280;
+      border: 2px solid #f3f4f6;
+
+      &:hover {
+        border-color: #ef4444;
+        color: #ef4444;
+        transform: translateY(-2px);
+      }
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* Loading and Error States */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f4f6;
+    border-top-color: #8b5cf6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #6b7280;
+    font-size: 1rem;
+  }
+}
+
+.error-state {
+  background: #fef2f2;
+  border-radius: 16px;
+  border: 2px solid #fecaca;
+
+  svg {
+    color: #ef4444;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    color: #dc2626;
+  }
+
+  p {
+    color: #b91c1c;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .activity-main {
+    grid-template-columns: 1fr;
+  }
+
+  .content-right {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .activity-details-container {
+    padding: 1rem;
+  }
+
+  .activity-header {
+    .header-left .activity-title {
+      font-size: 2rem;
+    }
+  }
+
+  .activity-main {
+    gap: 1.5rem;
+  }
+
+  .info-card,
+  .president-card,
+  .stats-card {
+    padding: 1.5rem;
+  }
+}

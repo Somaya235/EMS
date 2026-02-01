@@ -1,16 +1,19 @@
 <div class="verify-otp-container">
-  <div class="verify-otp-card">
-    <h2>Verify OTP</h2>
-    <p class="instruction">Please enter the 6-digit OTP sent to your email</p>
+  <div class="background-image"></div>
+  <div class="glass-card">
+    <div class="verify-otp-header">
+      <h2>Verify Your Email</h2>
+      <p class="instruction">Please enter the 6-digit OTP sent to your email address</p>
+    </div>
     
-    <form [formGroup]="verifyOtpForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="verifyOtpForm" (ngSubmit)="onSubmit()" class="verify-otp-form">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">Email Address</label>
         <input
           type="email"
           id="email"
           formControlName="email"
-          class="form-control"
+          class="glass-input"
           readonly
         />
       </div>
@@ -22,35 +25,40 @@
           id="otp"
           formControlName="otp"
           [ngClass]="{ 'is-invalid': submitted && f['otp'].errors }"
-          class="form-control"
+          class="glass-input otp-input"
           placeholder="Enter 6-digit code"
           maxlength="6"
+          (input)="onOtpInput($event)"
         />
-        <div *ngIf="submitted && f['otp'].errors" class="invalid-feedback">
-          <div *ngIf="f['otp'].errors['required']">OTP is required</div>
-          <div *ngIf="f['otp'].errors['pattern']">OTP must be 6 digits</div>
+        <div *ngIf="submitted && f['otp'].errors" class="error-message">
+          <span *ngIf="f['otp'].errors?.['required']">OTP is required</span>
+          <span *ngIf="f['otp'].errors?.['pattern']">OTP must be exactly 6 digits</span>
         </div>
       </div>
 
       <div class="form-group">
-        <button type="submit" [disabled]="loading" class="btn btn-primary">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-          Verify OTP
+        <button type="submit" [disabled]="loading" class="glass-button">
+          <span *ngIf="loading" class="loading-spinner"></span>
+          {{ loading ? 'Verifying...' : 'Verify Email' }}
         </button>
       </div>
 
-      <div *ngIf="error" class="alert alert-danger mt-3">
+      <div *ngIf="success" class="success-alert">
+        {{ success }}
+      </div>
+
+      <div *ngIf="error" class="error-alert">
         {{ error }}
       </div>
     </form>
 
     <div class="otp-actions">
-      <button type="button" (click)="resendOtp()" class="btn btn-link">
-        Resend OTP
+      <button type="button" (click)="resendOtp()" [disabled]="loading" class="glass-link resend-btn">
+        <span *ngIf="!loading && !otpSent">Resend OTP</span>
+        <span *ngIf="otpSent">OTP Sent!</span>
+        <span *ngIf="loading">Sending...</span>
       </button>
-      <a routerLink="/auth/login" class="btn btn-link">
-        Back to Login
-      </a>
+      <a routerLink="/auth/login" class="glass-link back-to-login">Back to Login</a>
     </div>
   </div>
 </div>

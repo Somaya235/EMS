@@ -1,111 +1,270 @@
 <div class="register-container">
-  <div class="register-card">
-    <h2>Register</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="form-row">
+  <div class="background-image"></div>
+  <div class="glass-card">
+    <div class="register-header">
+      <h2>Create Account</h2>
+      <p>Join the Event Management System</p>
+    </div>
+
+    <!-- Stepper Progress -->
+    <div class="stepper-container">
+      <div class="stepper">
+        <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+          <div class="step-number">1</div>
+          <div class="step-title">Personal Info</div>
+        </div>
+        <div class="step-line" [class.completed]="currentStep > 1"></div>
+        <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+          <div class="step-number">2</div>
+          <div class="step-title">Security</div>
+        </div>
+        <div class="step-line" [class.completed]="currentStep > 2"></div>
+        <div class="step" [class.active]="currentStep >= 3">
+          <div class="step-number">3</div>
+          <div class="step-title">Details</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-header">
+      <h3>{{ getStepTitle() }}</h3>
+    </div>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Step 1: Personal Information -->
+      <div *ngIf="currentStep === 1" class="step-content">
         <div class="form-group">
-          <label for="firstName">First Name</label>
+          <label for="fullName">Full Name</label>
           <input
             type="text"
-            id="firstName"
-            formControlName="firstName"
-            [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }"
-            class="form-control"
+            id="fullName"
+            formControlName="fullName"
+            [ngClass]="{ 'is-invalid': (submitted || f['fullName'].touched) && f['fullName'].errors }"
+            class="glass-input"
+            placeholder="Enter your full name"
+            (input)="onTextInput($event)"
+            (paste)="onPaste($event, 'text')"
           />
-          <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
-            First name is required
+          <div *ngIf="(submitted || f['fullName'].touched) && f['fullName'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('fullName')">
+              {{ error }}
+            </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="lastName">Last Name</label>
+          <label for="email">Email Address</label>
           <input
-            type="text"
-            id="lastName"
-            formControlName="lastName"
-            [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }"
-            class="form-control"
+            type="email"
+            id="email"
+            formControlName="email"
+            [ngClass]="{ 'is-invalid': (submitted || f['email'].touched) && f['email'].errors }"
+            class="glass-input"
+            placeholder="Enter your email"
+            (input)="onEmailInput($event)"
+            (paste)="onPaste($event, 'email')"
           />
-          <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
-            Last name is required
+          <div *ngIf="(submitted || f['email'].touched) && f['email'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('email')">
+              {{ error }}
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          formControlName="username"
-          [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
-          class="form-control"
-        />
-        <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
-          <div *ngIf="f['username'].errors['required']">Username is required</div>
-          <div *ngIf="f['username'].errors['minlength']">Username must be at least 3 characters</div>
+      <!-- Step 2: Account Security -->
+      <div *ngIf="currentStep === 2" class="step-content">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            [ngClass]="{ 'is-invalid': (submitted || f['password'].touched) && f['password'].errors }"
+            class="glass-input"
+            placeholder="Enter your password"
+          />
+          
+          <!-- Password Strength Indicator -->
+          <div *ngIf="f['password'].value" class="password-strength">
+            <div class="strength-bar">
+              <div 
+                class="strength-fill" 
+                [style.width.%]="(getPasswordStrength() / 5) * 100"
+                [style.background]="getPasswordStrengthColor()"
+              ></div>
+            </div>
+            <div class="strength-text" [style.color]="getPasswordStrengthColor()">
+              Password Strength: {{ getPasswordStrength() <= 2 ? 'Weak' : getPasswordStrength() <= 3 ? 'Medium' : 'Strong' }}
+            </div>
+          </div>
+          
+          <div *ngIf="(submitted || f['password'].touched) && f['password'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('password')">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            [ngClass]="{ 'is-invalid': (submitted || f['confirmPassword'].touched) && f['confirmPassword'].errors }"
+            class="glass-input"
+            placeholder="Confirm your password"
+          />
+          <div *ngIf="(submitted || f['confirmPassword'].touched) && f['confirmPassword'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('confirmPassword')">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="grade">Grade</label>
+          <input
+            type="number"
+            id="grade"
+            formControlName="grade"
+            [ngClass]="{ 'is-invalid': (submitted || f['grade'].touched) && f['grade'].errors }"
+            class="glass-input"
+            placeholder="Enter your grade (1-12)"
+            min="1"
+            max="12"
+            (input)="onNumberInput($event)"
+            (paste)="onPaste($event, 'number')"
+          />
+          <div *ngIf="(submitted || f['grade'].touched) && f['grade'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('grade')">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            formControlName="phoneNumber"
+            [ngClass]="{ 'is-invalid': (submitted || f['phoneNumber'].touched) && f['phoneNumber'].errors }"
+            class="glass-input"
+            placeholder="Enter your 11-digit phone number"
+            (input)="onPhoneNumberInput($event)"
+            (paste)="onPaste($event, 'phone')"
+          />
+          <div *ngIf="(submitted || f['phoneNumber'].touched) && f['phoneNumber'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('phoneNumber')">
+              {{ error }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
-          class="form-control"
-        />
-        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-          <div *ngIf="f['email'].errors['required']">Email is required</div>
-          <div *ngIf="f['email'].errors['email']">Please enter a valid email</div>
+      <!-- Step 3: Additional Details -->
+      <div *ngIf="currentStep === 3" class="step-content">
+        <div class="form-group">
+          <label for="nationalNumber">National Number</label>
+          <input
+            type="text"
+            id="nationalNumber"
+            formControlName="nationalNumber"
+            [ngClass]="{ 'is-invalid': (submitted || f['nationalNumber'].touched) && f['nationalNumber'].errors }"
+            class="glass-input"
+            placeholder="Enter your 16-digit national number"
+            (input)="onNumberInput($event)"
+            (paste)="onPaste($event, 'number')"
+          />
+          <div *ngIf="(submitted || f['nationalNumber'].touched) && f['nationalNumber'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('nationalNumber')">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input
+            type="date"
+            id="dateOfBirth"
+            formControlName="dateOfBirth"
+            [ngClass]="{ 'is-invalid': (submitted || f['dateOfBirth'].touched) && f['dateOfBirth'].errors }"
+            class="glass-input"
+          />
+          <div *ngIf="(submitted || f['dateOfBirth'].touched) && f['dateOfBirth'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('dateOfBirth')">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="collageId">College ID</label>
+          <input
+            type="text"
+            id="collageId"
+            formControlName="collageId"
+            [ngClass]="{ 'is-invalid': (submitted || f['collageId'].touched) && f['collageId'].errors }"
+            class="glass-input"
+            placeholder="Enter your college ID"
+            (input)="onCollegeIdInput($event)"
+            (paste)="onPaste($event, 'collegeId')"
+          />
+          <div *ngIf="(submitted || f['collageId'].touched) && f['collageId'].errors" class="error-message">
+            <div *ngFor="let error of getFieldError('collageId')">
+              {{ error }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
-          class="form-control"
-        />
-        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
-          <div *ngIf="f['password'].errors['required']">Password is required</div>
-          <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
-        </div>
-      </div>
+      <!-- Stepper Navigation -->
+      <div class="stepper-navigation">
+        <button 
+          type="button" 
+          *ngIf="currentStep > 1"
+          (click)="previousStep()" 
+          [disabled]="loading"
+          class="glass-button secondary-button"
+        >
+          Previous
+        </button>
 
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          formControlName="confirmPassword"
-          [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }"
-          class="form-control"
-        />
-        <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
-          <div *ngIf="f['confirmPassword'].errors['required']">Confirm password is required</div>
-          <div *ngIf="f['confirmPassword'].errors['mustMatch']">Passwords must match</div>
-        </div>
-      </div>
+        <button 
+          type="button" 
+          *ngIf="currentStep < totalSteps"
+          (click)="nextStep()" 
+          [disabled]="loading || !isCurrentStepValid()"
+          class="glass-button primary-button"
+        >
+          Next
+        </button>
 
-      <div class="form-group">
-        <button type="submit" [disabled]="loading" class="btn btn-primary">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span>
-          Register
+        <button 
+          type="submit" 
+          *ngIf="currentStep === totalSteps"
+          [disabled]="loading || registerForm.invalid"
+          class="glass-button primary-button"
+        >
+          <span *ngIf="loading" class="loading-spinner"></span>
+          {{ loading ? 'Creating Account...' : 'Create Account' }}
         </button>
       </div>
 
-      <div *ngIf="error" class="alert alert-danger mt-3">
+      <div *ngIf="success" class="success-alert">
+        {{ success }}
+      </div>
+
+      <div *ngIf="error" class="error-alert">
         {{ error }}
       </div>
     </form>
 
     <div class="register-links">
-      <a routerLink="/auth/login">Already have an account? Login</a>
+      <a routerLink="/auth/login" class="glass-link">Already have an account? Sign In</a>
     </div>
   </div>
 </div>
