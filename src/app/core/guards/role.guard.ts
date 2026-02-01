@@ -9,15 +9,15 @@ export class RoleGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   canActivate(): boolean {
     const userRole = this.authService.getUserRole();
-    // Add your role-based logic here
-    if (userRole) {
+    // Only allow super_admin role
+    if (userRole === 'super_admin') {
       return true;
     } else {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/dashboard']);
       return false;
     }
   }

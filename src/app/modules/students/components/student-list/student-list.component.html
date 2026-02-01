@@ -1,0 +1,69 @@
+<app-header></app-header>
+
+<div class="students-container">
+  <div class="students-header">
+    <h1>Student Profiles</h1>
+    <p>Browse and connect with fellow students</p>
+  </div>
+
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="onSearchChange()"
+      placeholder="Search students by name, email, or grade..."
+      class="search-input"
+    >
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading students...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Students Grid -->
+  <div *ngIf="!loading && !error" class="students-grid">
+    <div 
+      *ngFor="let student of students" 
+      class="student-card"
+    >
+      <div class="student-avatar">
+        <img [src]="student.profileImage || 'assets/images/default-avatar.svg'" [alt]="student.fullName">
+      </div>
+      
+      <div class="student-content">
+        <h3 class="student-name">{{ student.fullName }}</h3>
+        <p class="student-email">{{ student.email }}</p>
+        
+        <button class="view-profile-btn" (click)="viewStudentProfile(student)">
+          View Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && students.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+    </div>
+    <h3>No students found</h3>
+    <p>Try adjusting your search criteria</p>
+  </div>
+</div>

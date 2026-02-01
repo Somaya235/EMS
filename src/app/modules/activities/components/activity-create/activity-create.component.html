@@ -1,0 +1,116 @@
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Create Student Activity</h2>
+      <button class="close-btn" (click)="closeDialog()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="activity-form">
+      <!-- Error Message -->
+      <div *ngIf="error" class="error-message">
+        <p>{{ error }}</p>
+      </div>
+
+      <!-- Activity Name -->
+      <div class="form-group">
+        <label for="name">Activity Name *</label>
+        <input 
+          id="name"
+          type="text" 
+          formControlName="name"
+          placeholder="Enter activity name"
+          [class.error]="name?.invalid && name?.touched"
+        >
+        <div *ngIf="name?.invalid && name?.touched" class="error-text">
+          <span *ngIf="name?.errors?.['required']">Activity name is required</span>
+          <span *ngIf="name?.errors?.['minlength']">Name must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea 
+          id="description"
+          formControlName="description"
+          placeholder="Describe the activity, its goals, and what students will do"
+          rows="4"
+          [class.error]="description?.invalid && description?.touched"
+        ></textarea>
+        <div *ngIf="description?.invalid && description?.touched" class="error-text">
+          <span *ngIf="description?.errors?.['required']">Description is required</span>
+          <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+        </div>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select 
+          id="category"
+          formControlName="category"
+          [class.error]="category?.invalid && category?.touched"
+        >
+          <option value="">Select a category</option>
+          <option *ngFor="let cat of categories" [value]="cat.value">
+            {{ cat.name }}
+          </option>
+        </select>
+        <div *ngIf="category?.invalid && category?.touched" class="error-text">
+          <span *ngIf="category?.errors?.['required']">Category is required</span>
+        </div>
+      </div>
+
+      <!-- President -->
+      <div class="form-group">
+        <label for="presidentId">President *</label>
+        <select 
+          id="presidentId"
+          formControlName="presidentId"
+          [class.error]="presidentId?.invalid && presidentId?.touched"
+          [disabled]="studentsLoading"
+        >
+          <option value="">
+            {{ studentsLoading ? 'Loading students...' : 'Select a president' }}
+          </option>
+          <option *ngFor="let student of students" [value]="student.id">
+            {{ student.fullName }}
+          </option>
+        </select>
+        <div *ngIf="presidentId?.invalid && presidentId?.touched" class="error-text">
+          <span *ngIf="presidentId?.errors?.['required']">President is required</span>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="closeDialog()"
+          [disabled]="loading"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="loading || activityForm.invalid"
+        >
+          <span *ngIf="!loading">Create Activity</span>
+          <span *ngIf="loading" class="loading-spinner">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+            Creating...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

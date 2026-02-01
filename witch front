@@ -1,0 +1,17 @@
+[33m604d0cd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m front
+[33m4b7dce4[m stu-Activity CRUD with front base structer
+[33m5738bc6[m[33m ([m[1;31morigin/backend[m[33m)[m latest update
+[33me9b7887[m updates
+[33ma795ef8[m fix: remove hardcoded secrets from application.properties
+[33md71dcd8[m make the variables secured & changed DB server
+[33m4e9677a[m Resolve merge conflicts in Poll.java and pom.xml
+[33m8f88270[m Resolve merge conflicts: Add JUnit dependency, update AuthController imports, add tags to Poll model
+[33m731972f[m update attributes
+[33m8972ee2[m added new attributes
+[33mbb703d2[m JWT authentication success
+[33m89c7007[m JWT authentication success
+[33m1236f8e[m JWT authentication success
+[33m9422aa8[m JWT authentication success
+[33m6699263[m models and repositories
+[33m844e21a[m models and repositories
+[33m2de332a[m backend
