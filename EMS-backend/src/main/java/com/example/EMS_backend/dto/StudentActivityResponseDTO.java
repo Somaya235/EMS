@@ -10,6 +10,7 @@ public class StudentActivityResponseDTO {
     private String description;
     private String category;
     private Long presidentId;
+    private String presidentName;
     
     // Getters and Setters
     public Long getId() {
@@ -50,5 +51,13 @@ public class StudentActivityResponseDTO {
 
     public void setPresidentId(Long presidentId) {
         this.presidentId = presidentId;
+    }
+
+    public String getPresidentName() {
+        return presidentName;
+    }
+
+    public void setPresidentName(String presidentName) {
+        this.presidentName = presidentName;
     }
 }

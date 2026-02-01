@@ -54,8 +54,56 @@ public class Committee extends AuditableEntity {
   )
   private Set<User> members = new HashSet<>();
 
-  // Explicit getter for compilation compatibility
+  // Manual getters and setters to avoid Lombok compilation issues
   public Long getId() {
     return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public StudentActivity getActivity() {
+    return activity;
+  }
+
+  public void setActivity(StudentActivity activity) {
+    this.activity = activity;
+  }
+
+  public User getDirector() {
+    return director;
+  }
+
+  public void setDirector(User director) {
+    this.director = director;
+  }
+
+  public User getHead() {
+    return head;
+  }
+
+  public void setHead(User head) {
+    this.head = head;
+  }
+
+  public Set<User> getMembers() {
+    return members;
+  }
+
+  public void setMembers(Set<User> members) {
+    this.members = members;
   }
 }

@@ -17,6 +17,7 @@ public interface StudentActivityMapper {
      * Convert StudentActivity entity to StudentActivityResponseDTO.
      */
     @Mapping(target = "presidentId", source = "president.id")
+    @Mapping(target = "presidentName", source = "president.fullName")
     StudentActivityResponseDTO toResponseDTO(StudentActivity activity);
     
     /**

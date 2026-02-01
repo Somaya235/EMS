@@ -77,7 +77,7 @@ public class PasswordResetService {
         }
 
         User user = resetToken.getUser();
-        
+
         if (!user.getEnabled()) {
             throw new IllegalStateException("Account is not enabled. Please contact support.");
         }

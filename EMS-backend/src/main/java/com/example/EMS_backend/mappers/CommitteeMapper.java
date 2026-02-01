@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Mapper(
         componentModel = "spring",
-        uses = {StudentActivityMapper.class},
+        uses = {StudentActivityMapper.class, UserMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface CommitteeMapper {

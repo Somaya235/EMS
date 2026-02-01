@@ -1,6 +1,7 @@
 package com.example.EMS_backend.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Response DTO for committee data.
@@ -11,6 +12,9 @@ public class CommitteeResponseDTO {
     private String name;
     private String description;
     private StudentActivityResponseDTO activity;
+    private UserResponseDTO head;
+    private UserResponseDTO director;
+    private List<UserResponseDTO> members;
     private LocalDateTime createdAt;
     
     // Getters and Setters
@@ -52,5 +56,29 @@ public class CommitteeResponseDTO {
     
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+    
+    public UserResponseDTO getHead() {
+        return head;
+    }
+    
+    public void setHead(UserResponseDTO head) {
+        this.head = head;
+    }
+    
+    public UserResponseDTO getDirector() {
+        return director;
+    }
+    
+    public void setDirector(UserResponseDTO director) {
+        this.director = director;
+    }
+    
+    public List<UserResponseDTO> getMembers() {
+        return members;
+    }
+    
+    public void setMembers(List<UserResponseDTO> members) {
+        this.members = members;
     }
 }
