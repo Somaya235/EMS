@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "EmsBackendApplication",
+      "request": "launch",
+      "mainClass": "com.example.EMS_backend.EmsBackendApplication",
+      "projectName": "EMS-backend"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

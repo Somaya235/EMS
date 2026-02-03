@@ -9,7 +9,8 @@ import { ResetPasswordComponent } from './modules/auth/components/reset-password
 import { DashboardComponent } from './modules/admin/components/dashboard/dashboard.component';
 import { ActivityListComponent } from './modules/activities/components/activity-list/activity-list.component';
 import { ActivityDetailsComponent } from './modules/activities/components/activity-details/activity-details.component';
-import { STUDENTS_ROUTES } from './modules/students/students.routes';
+import { StudentListComponent } from './modules/students/components/student-list/student-list.component';
+import { StudentProfile } from './modules/students/components/student-profile/student-profile';
 
 export const routes: Routes = [
     {
@@ -65,10 +66,29 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Activity Details - EMS'
     },
+
     {
         path: 'students',
         canActivate: [AuthGuard, RoleGuard],
-        children: STUDENTS_ROUTES
+        children: [
+            {
+                path: '',
+                component: StudentListComponent,
+                title: 'Students - EMS'
+            },
+            {
+                path: ':id',
+                component: StudentProfile,
+                title: 'Student Profile - EMS'
+            }
+        ]
+    },
+
+    {
+        path: 'profile',
+        component: StudentProfile,
+        canActivate: [AuthGuard],
+        title: 'My Profile - EMS'
     },
 
     {

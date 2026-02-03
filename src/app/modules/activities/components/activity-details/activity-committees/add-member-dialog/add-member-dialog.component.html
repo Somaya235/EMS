@@ -1,0 +1,97 @@
+<div class="dialog-overlay" *ngIf="isVisible" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3 class="dialog-title">Add Member to Committee</h3>
+      <button class="close-btn" (click)="closeDialog()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="dialog-content">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading students...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="error-state">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>{{ error }}</p>
+      </div>
+
+      <!-- Student List -->
+      <div *ngIf="!loading && !error" class="student-list">
+        <!-- Search Bar -->
+        <div class="search-section">
+          <div class="search-input-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input 
+              type="text" 
+              class="search-input" 
+              placeholder="Search students by name, email, or ID..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange()"
+            >
+          </div>
+        </div>
+
+        <!-- Students -->
+        <div class="students-container">
+          <div *ngIf="filteredStudents.length === 0" class="no-results">
+            <p>No students found matching your search.</p>
+          </div>
+          
+          <div *ngFor="let student of filteredStudents" class="student-item" 
+               [class.selected]="isStudentSelected(student.id)"
+               (click)="selectStudent(student.id)">
+            <div class="student-checkbox">
+              <input type="checkbox" 
+                     [checked]="isStudentSelected(student.id)"
+                     (change)="selectStudent(student.id)"
+                     (click)="$event.stopPropagation()">
+            </div>
+            <div class="student-avatar" [style.background-color]="getAvatarColor(student.fullName)">
+              {{ getInitials(student.fullName) }}
+            </div>
+            <div class="student-info">
+              <div class="student-name">{{ student.fullName }}</div>
+              <div class="student-details">
+                <span class="student-email">{{ student.email }}</span>
+                <span class="student-id">ID: {{ student.collageId }}</span>
+              </div>
+            </div>
+            <div class="selection-indicator">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="closeDialog()">Cancel</button>
+      <button class="btn-add" 
+              [disabled]="selectedStudentIds.length === 0 || loading"
+              (click)="addMembers()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add {{ selectedStudentIds.length }} Member{{ selectedStudentIds.length !== 1 ? 's' : '' }}
+      </button>
+    </div>
+  </div>
+</div>

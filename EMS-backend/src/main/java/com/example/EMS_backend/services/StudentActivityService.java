@@ -147,6 +147,13 @@ public class StudentActivityService {
     }
 
     /**
+     * Get all activities for a specific president.
+     */
+    public List<StudentActivity> getActivitiesByPresident(Long presidentId) {
+        return studentActivityRepository.findByPresidentId(presidentId);
+    }
+
+    /**
      * Assigns or updates an Activity Director for a specific Student Activity.
      * Only the president of the activity can perform this operation.
      *

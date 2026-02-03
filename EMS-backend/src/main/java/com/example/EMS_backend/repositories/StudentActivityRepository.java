@@ -13,4 +13,6 @@ public interface StudentActivityRepository extends JpaRepository<StudentActivity
     boolean existsByPresident(User president);
     
     List<StudentActivity> findByPresident(User president);
+    
+    List<StudentActivity> findByPresidentId(Long presidentId);
 }

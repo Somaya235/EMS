@@ -156,5 +156,34 @@ public class StudentActivityController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    /**
+     * Update a student activity.
+     * Only the president of the activity can update it.
+     *
+     * PUT /student-activities/{activityId}
+     */
+    @PutMapping("/{activityId}")
+    @PreAuthorize("hasAuthority('activity_president')")
+    @Operation(summary = "Update student activity", description = "Update a student activity. Only the activity president can update it.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully updated activity"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - Only activity presidents can update activities"),
+        @ApiResponse(responseCode = "404", description = "Activity not found")
+    })
+    public ResponseEntity<StudentActivityResponseDTO> updateStudentActivity(
+            @Parameter(description = "ID of the student activity to update") @PathVariable Long activityId,
+            @Parameter(description = "Updated activity details") @Valid @RequestBody StudentActivityRequestDTO requestDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+
+        StudentActivity updatedActivity = studentActivityService.updateActivity(activityId, requestDTO, currentUserId);
+        StudentActivityResponseDTO responseDTO = studentActivityMapper.toResponseDTO(updatedActivity);
+        return ResponseEntity.ok(responseDTO);
+    }
+
 
 }

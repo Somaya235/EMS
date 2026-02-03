@@ -1,0 +1,106 @@
+<!-- Backdrop -->
+<div *ngIf="isVisible" class="dialog-backdrop" (click)="onBackdropClick($event)">
+  <!-- Dialog -->
+  <div class="edit-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+      <h2 class="dialog-title">Edit Activity</h2>
+      <button class="close-btn" (click)="onClose()" title="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="dialog-content">
+      <form class="edit-form">
+        <!-- Name Field -->
+        <div class="form-group">
+          <label for="activity-name" class="form-label">Activity Name</label>
+          <input
+            id="activity-name"
+            name="activityName"
+            type="text"
+            class="form-input"
+            [(ngModel)]="formData.name"
+            placeholder="Enter activity name"
+            required
+          />
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group">
+          <label for="activity-description" class="form-label">Description</label>
+          <textarea
+            id="activity-description"
+            name="activityDescription"
+            class="form-textarea"
+            [(ngModel)]="formData.description"
+            placeholder="Enter activity description"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Category Field -->
+        <div class="form-group">
+          <label for="activity-category" class="form-label">Category</label>
+          <select
+            id="activity-category"
+            name="activityCategory"
+            class="form-select"
+            [(ngModel)]="formData.category"
+            required
+          >
+            <option value="">Select a category</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Vision Field -->
+        <div class="form-group">
+          <label for="activity-vision" class="form-label">Vision</label>
+          <textarea
+            id="activity-vision"
+            name="activityVision"
+            class="form-textarea"
+            [(ngModel)]="formData.vision"
+            placeholder="Enter activity vision statement"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Mission Field -->
+        <div class="form-group">
+          <label for="activity-mission" class="form-label">Mission</label>
+          <textarea
+            id="activity-mission"
+            name="activityMission"
+            class="form-textarea"
+            [(ngModel)]="formData.mission"
+            placeholder="Enter activity mission statement"
+            rows="3"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-footer">
+      <button class="btn btn-secondary" (click)="onClose()">
+        Cancel
+      </button>
+      <button 
+        class="btn btn-primary" 
+        (click)="onSave()"
+        [disabled]="!formData.name.trim() || !formData.description.trim()"
+      >
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>

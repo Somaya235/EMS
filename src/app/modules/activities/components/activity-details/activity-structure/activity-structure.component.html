@@ -1,0 +1,64 @@
+<div class="activity-structure">
+  <h3 class="structure-title">Activity Structure</h3>
+  
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading activity structure...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Structure Content -->
+  <div *ngIf="!loading && !error" class="structure-content">
+    
+    <!-- President Section -->
+    <div class="structure-section" *ngIf="structure.president">
+      <h4 class="section-label">President</h4>
+      <div class="president-item">
+        <div class="person-avatar" [style.background-color]="getAvatarColor(structure.president?.fullName || 'No President')">
+          {{ getInitials(structure.president?.fullName || 'No President') }}
+        </div>
+        <span class="person-name">{{ structure.president?.fullName || 'No President Assigned' }}</span>
+      </div>
+    </div>
+
+    <!-- Directors Section -->
+    <div class="structure-section" *ngIf="structure.directors.length > 0">
+      <h4 class="section-label">Directors</h4>
+      <div class="person-list">
+        <div *ngFor="let director of structure.directors" class="director-item">
+          <div class="person-avatar" [style.background-color]="getAvatarColor(director.directorFullName)">
+            {{ getInitials(director.directorFullName) }}
+          </div>
+          <div class="person-info">
+            <span class="person-name">{{ director.directorFullName }}</span>
+            <span class="position-name">{{ director.positionName }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Committee Heads Section -->
+    <div class="structure-section" *ngIf="structure.committeeHeads.length > 0">
+      <h4 class="section-label">Committee Heads</h4>
+      <div class="committee-summary">
+        <p class="summary-text">{{ structure.totalCommittees }} committees with dedicated heads</p>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!structure.president && structure.directors.length === 0 && structure.committeeHeads.length === 0" class="empty-state">
+      <p>No structure information available for this activity.</p>
+    </div>
+  </div>
+</div>

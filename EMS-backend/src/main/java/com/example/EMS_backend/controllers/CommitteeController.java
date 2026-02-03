@@ -4,6 +4,7 @@ import com.example.EMS_backend.dto.AddMemberRequestDTO;
 import com.example.EMS_backend.dto.CommitteeRequestDTO;
 import com.example.EMS_backend.dto.CommitteeResponseDTO;
 import com.example.EMS_backend.dto.UserResponseDTO;
+import com.example.EMS_backend.dto.MessageResponse;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.security.UserDetailsImpl;
 import com.example.EMS_backend.services.CommitteeService;
@@ -198,7 +199,6 @@ public class CommitteeController {
      * POST /api/committees/{committeeId}/members
      */
     @PostMapping("/{committeeId}/members")
-    @PreAuthorize("hasAuthority('committee_head')")
     public ResponseEntity<CommitteeResponseDTO> addMember(
             @PathVariable Long committeeId,
             @Valid @RequestBody AddMemberRequestDTO requestDTO) {
@@ -234,5 +234,101 @@ public class CommitteeController {
                 })
                 .collect(java.util.stream.Collectors.toList());
         return ResponseEntity.ok(studentDTOs);
+    }
+
+    /**
+     * Get all committees for the current president.
+     * Returns all committees where the current user is the president of the associated activity.
+     *
+     * GET /api/committees/president
+     */
+    @GetMapping("/president")
+    @PreAuthorize("hasAuthority('activity_president')")
+    public ResponseEntity<List<CommitteeResponseDTO>> getPresidentCommittees() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+
+        List<CommitteeResponseDTO> committees = committeeService.getPresidentCommittees(currentUserId);
+        return ResponseEntity.ok(committees);
+    }
+
+    /**
+     * Get all students.
+     * Accessible to activity presidents for assigning committee heads and directors.
+     *
+     * GET /api/committees/all-students
+     */
+    @GetMapping("/all-students")
+    public ResponseEntity<List<UserResponseDTO>> getAllStudents() {
+        List<User> students = committeeService.getAllStudents();
+        List<UserResponseDTO> studentDTOs = students.stream()
+                .map(student -> {
+                    UserResponseDTO dto = new UserResponseDTO();
+                    dto.setId(student.getId());
+                    dto.setFullName(student.getFullName());
+                    dto.setEmail(student.getEmail());
+                    dto.setCollageId(student.getCollageId());
+                    dto.setGrade(student.getGrade());
+                    dto.setMajor(student.getMajor());
+                    return dto;
+                })
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(studentDTOs);
+    }
+
+    /**
+     * Update a committee.
+     * Only the president of the activity can update committees.
+     *
+     * PUT /api/committees/{committeeId}
+     */
+    @PutMapping("/{committeeId}")
+    @PreAuthorize("hasAuthority('activity_president')")
+    @Operation(summary = "Update committee", description = "Update committee details. Only activity presidents can update committees.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully updated committee"),
+        @ApiResponse(responseCode = "400", description = "Invalid request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - Only activity presidents can update committees"),
+        @ApiResponse(responseCode = "404", description = "Committee not found")
+    })
+    public ResponseEntity<CommitteeResponseDTO> updateCommittee(
+            @Parameter(description = "ID of the committee") @PathVariable Long committeeId,
+            @Parameter(description = "Committee update details") @Valid @RequestBody CommitteeRequestDTO requestDTO) {
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+
+        CommitteeResponseDTO responseDTO = committeeService.updateCommittee(committeeId, requestDTO, currentUserId);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    /**
+     * Remove a member from a committee.
+     * Only the president of the activity can remove members from committees.
+     *
+     * DELETE /api/committees/{committeeId}/members/{memberId}
+     */
+    @DeleteMapping("/{committeeId}/members/{memberId}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Remove member from committee", description = "Remove a member from a committee. Only the committee head can remove members from their own committee.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully removed member from committee"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - Only committee heads can remove members from their own committee"),
+        @ApiResponse(responseCode = "404", description = "Committee or member not found")
+    })
+    public ResponseEntity<MessageResponse> removeMemberFromCommittee(
+            @Parameter(description = "ID of the committee") @PathVariable Long committeeId,
+            @Parameter(description = "ID of the member to remove") @PathVariable Long memberId) {
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long currentUserId = userDetails.getId();
+
+        committeeService.removeMemberFromCommittee(committeeId, memberId, currentUserId);
+        return ResponseEntity.ok(new MessageResponse("Member removed from committee successfully"));
     }
 }

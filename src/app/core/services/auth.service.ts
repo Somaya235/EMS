@@ -160,29 +160,42 @@ export class AuthService {
 
   private loadUserFromToken(): void {
     const token = this.tokenStorage.getToken();
-    const user = this.tokenStorage.getUser();
 
-    if (token && user) {
-      // Load user from token storage
-      this.currentUserSubject.next(user);
-    } else if (token) {
-      // If token exists but no user data, make API call to get current user
-      this.apiService.get<User>('/auth/me').pipe(
-        catchError((error: any) => {
-          console.error('Error loading current user:', error);
-          this.currentUserSubject.next(null);
-          return of(null);
-        })
-      ).subscribe((user: User | null) => {
-        if (user) {
-          this.tokenStorage.saveUser(user);
-          this.currentUserSubject.next(user);
-        } else {
-          this.currentUserSubject.next(null);
-        }
-      });
-    } else {
+    if (!token) {
       this.currentUserSubject.next(null);
+      return;
     }
+
+    // Always fetch fresh data from backend instead of using cached data
+    this.apiService.get<User>('/auth/me').pipe(
+      catchError((error: any) => {
+        console.error('Error loading current user:', error);
+        this.currentUserSubject.next(null);
+        return of(null);
+      })
+    ).subscribe((user: User | null) => {
+      if (user) {
+        this.tokenStorage.saveUser(user);
+        this.currentUserSubject.next(user);
+      } else {
+        this.currentUserSubject.next(null);
+      }
+    });
+  }
+
+  public refreshCurrentUser(): Observable<User | null> {
+    const token = this.tokenStorage.getToken();
+    if (!token) {
+      this.currentUserSubject.next(null);
+      return of(null);
+    }
+
+    return this.apiService.get<User>('/auth/me').pipe(
+      catchError((error: any) => {
+        console.error('Error refreshing current user:', error);
+        this.currentUserSubject.next(null);
+        return of(null);
+      })
+    );
   }
 }

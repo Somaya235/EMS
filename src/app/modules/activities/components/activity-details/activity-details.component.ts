@@ -7,16 +7,18 @@ import { Activity } from '../../../../core/models/activity.model';
 import { ActivityService } from '../../../../core/services/activity.service';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { ActivityCommitteesComponent } from "./activity-committees/activity-committees.component";
+import { ActivityStructureComponent } from "./activity-structure/activity-structure.component";
 
 @Component({
   selector: 'app-activity-details',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, ActivityCommitteesComponent],
+  imports: [CommonModule, HeaderComponent, ActivityCommitteesComponent, ActivityStructureComponent],
   templateUrl: './activity-details.component.html',
   styleUrls: ['./activity-details.component.scss']
 })
 export class ActivityDetailsComponent implements OnInit {
   activity$!: Observable<Activity | null>;
+  activity: Activity | null = null;
   loading = true;
   error: string | null = null;
 
@@ -27,6 +29,18 @@ export class ActivityDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadActivityData();
+
+    // Refresh data when route parameters change (e.g., when navigating back after edit)
+    this.route.paramMap.subscribe(() => {
+      this.loadActivityData();
+    });
+  }
+
+  private loadActivityData(): void {
+    this.loading = true;
+    this.error = null;
+
     this.activity$ = this.route.paramMap.pipe(
       switchMap(params => {
         const id = params.get('id');
@@ -46,10 +60,34 @@ export class ActivityDetailsComponent implements OnInit {
     );
 
     this.activity$.subscribe(activity => {
+      this.activity = activity;
       if (activity) {
         this.loading = false;
       }
     });
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '';
+    const parts = name.split(' ');
+    if (parts.length > 1) {
+      return parts[0].charAt(0).toUpperCase() + parts[1].charAt(0).toUpperCase();
+    } else if (parts.length === 1) {
+      return parts[0].charAt(0).toUpperCase();
+    }
+    return '';
+  }
+
+  getActivityColor(name: string): string {
+    const colors = [
+      '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash % colors.length);
+    return colors[index];
   }
 
   joinActivity(activityId: number): void {
@@ -114,6 +152,20 @@ export class ActivityDetailsComponent implements OnInit {
     }
 
     return this.getDefaultRequirements(activity.category);
+  }
+
+  refreshActivity(): void {
+    if (this.activity) {
+      this.activityService.getActivityById(this.activity.id).subscribe({
+        next: (updatedActivity) => {
+          this.activity = updatedActivity;
+          this.activity$ = of(updatedActivity);
+        },
+        error: (error) => {
+          console.error('Error refreshing activity:', error);
+        }
+      });
+    }
   }
 
   // Helper method to get requirements when activity is loaded

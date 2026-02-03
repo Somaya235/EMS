@@ -1,0 +1,88 @@
+<div *ngIf="isVisible" class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Edit Committee</h2>
+      <button class="close-btn" (click)="closeDialog()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="dialog-content">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="error-state">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>{{ error }}</p>
+      </div>
+
+      <!-- Form -->
+      <div *ngIf="!loading && !error" class="form-container">
+        <div class="form-group">
+          <label for="committee-name">Committee Name *</label>
+          <input 
+            id="committee-name"
+            type="text" 
+            [(ngModel)]="formData.name" 
+            placeholder="Enter committee name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="committee-description">Description</label>
+          <textarea 
+            id="committee-description"
+            [(ngModel)]="formData.description" 
+            placeholder="Enter committee description"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="committee-head">Committee Head</label>
+          <select id="committee-head" [(ngModel)]="formData.headId">
+            <option [ngValue]="null">Select Committee Head (Optional)</option>
+            <option *ngFor="let user of availableUsers" [ngValue]="user.id">
+              {{ user.fullName }} ({{ user.email }})
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="committee-director">Committee Director</label>
+          <select id="committee-director" [(ngModel)]="formData.directorId">
+            <option [ngValue]="null">Select Committee Director (Optional)</option>
+            <option *ngFor="let user of availableUsers" [ngValue]="user.id">
+              {{ user.fullName }} ({{ user.email }})
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button class="btn-cancel" (click)="closeDialog()">Cancel</button>
+      <button class="btn-update" 
+              [disabled]="!formData.name.trim() || loading"
+              (click)="updateCommittee()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        Update Committee
+      </button>
+    </div>
+  </div>
+</div>

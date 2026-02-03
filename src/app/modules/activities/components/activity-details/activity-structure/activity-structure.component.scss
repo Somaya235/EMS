@@ -1,0 +1,304 @@
+.activity-structure {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+
+  .structure-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f3f4f6;
+  }
+
+  .loading-state,
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    svg {
+      color: #ef4444;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #6b7280;
+      margin: 0;
+      font-size: 0.875rem;
+    }
+  }
+
+  .structure-content {
+    .structure-section {
+      margin-bottom: 1.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .section-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0 0 0.75rem 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .person-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .president-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 0.5rem;
+        border: 1px solid #f3f4f6;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f3f4f6;
+          border-color: #e5e7eb;
+          transform: translateY(-1px);
+        }
+
+        .person-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 600;
+          font-size: 0.875rem;
+          margin-right: 0.75rem;
+          flex-shrink: 0;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-name {
+          font-size: 0.875rem;
+          color: #374151;
+          font-weight: 500;
+          line-height: 1.2;
+        }
+      }
+
+      .director-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 0.5rem;
+        border: 1px solid #f3f4f6;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f3f4f6;
+          border-color: #e5e7eb;
+          transform: translateY(-1px);
+        }
+
+        .person-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 600;
+          font-size: 0.875rem;
+          margin-right: 0.75rem;
+          flex-shrink: 0;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+
+          .person-name {
+            font-weight: 600;
+            color: #111827;
+            font-size: 0.875rem;
+          }
+
+          .position-name {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+            background: #f3f4f6;
+            padding: 0.125rem 0.5rem;
+            border-radius: 1rem;
+            align-self: flex-start;
+          }
+        }
+      }
+
+      .committee-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 0.5rem;
+        border: 1px solid #f3f4f6;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f3f4f6;
+          border-color: #e5e7eb;
+          transform: translateY(-1px);
+        }
+
+        .person-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 600;
+          font-size: 0.875rem;
+          margin-right: 0.75rem;
+          flex-shrink: 0;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+
+          .person-name {
+            font-weight: 600;
+            color: #111827;
+          }
+
+          .committee-name {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+          }
+
+          .member-count {
+            font-size: 0.75rem;
+            color: #3b82f6;
+            font-weight: 600;
+            background: #eff6ff;
+            padding: 0.125rem 0.5rem;
+            border-radius: 1rem;
+            align-self: flex-start;
+          }
+        }
+      }
+
+      .committee-summary {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+
+        .summary-text {
+          font-size: 0.875rem;
+          color: #0369a1;
+          font-weight: 500;
+          margin: 0;
+        }
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7280;
+
+      p {
+        font-size: 0.875rem;
+        margin: 0;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .activity-structure {
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    .structure-title {
+      font-size: 1.125rem;
+      margin-bottom: 1rem;
+    }
+
+    .structure-content {
+      .structure-section {
+        margin-bottom: 1rem;
+
+        .person-item {
+          padding: 0.5rem;
+
+          .person-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+          }
+
+          .person-name {
+            font-size: 0.8rem;
+          }
+
+          &.committee-item {
+            .person-info {
+
+              .committee-name,
+              .member-count {
+                font-size: 0.7rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

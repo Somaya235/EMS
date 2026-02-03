@@ -20,6 +20,8 @@ export interface Activity {
     fullName: string;
     email: string;
   };
+  vision?: string;
+  mission?: string;
 }
 
 export interface ActivityCategory {

@@ -4,6 +4,7 @@ import com.example.EMS_backend.dto.*;
 import com.example.EMS_backend.exceptions.TokenRefreshException;
 import com.example.EMS_backend.models.RefreshToken;
 import com.example.EMS_backend.models.User;
+import com.example.EMS_backend.repositories.UserRepository;
 import com.example.EMS_backend.security.JwtUtils;
 import com.example.EMS_backend.security.UserDetailsImpl;
 import com.example.EMS_backend.services.AuthService;
@@ -13,17 +14,16 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,6 +34,9 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -52,6 +55,42 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findById(userDetails.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Convert to DTO to avoid circular reference issues
+        UserResponseDTO userDTO = new UserResponseDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFullName(user.getFullName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setEnabled(user.getEnabled());
+        userDTO.setGrade(user.getGrade());
+        userDTO.setMajor(user.getMajor());
+        userDTO.setPhoneNumber(user.getPhoneNumber());
+        userDTO.setNationalNumber(user.getNationalNumber());
+        userDTO.setDateOfBirth(user.getDateOfBirth());
+        userDTO.setCvAttachment(user.getCvAttachment());
+        userDTO.setProfileImage(user.getProfileImage());
+        userDTO.setCollageId(user.getCollageId());
+        userDTO.setCreatedAt(user.getCreatedAt());
+        userDTO.setUpdatedAt(user.getUpdatedAt());
+        
+        // Convert roles to string set
+        Set<String> roles = new HashSet<>();
+        if (user.getRoles() != null) {
+            for (var role : user.getRoles()) {
+                roles.add(role.getName());
+            }
+        }
+        userDTO.setRoles(roles);
+        
+        return ResponseEntity.ok(userDTO);
     }
 
     @PostMapping("/signup")

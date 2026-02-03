@@ -6,11 +6,12 @@ import { User } from '../../../../core/models/user.model';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
+import { EditProfileDialogComponent } from './edit-profile-dialog/edit-profile-dialog.component';
 
 @Component({
   selector: 'app-student-profile',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, EditProfileDialogComponent],
   templateUrl: './student-profile.html',
   styleUrl: './student-profile.css',
   providers: [UserService]
@@ -20,6 +21,8 @@ export class StudentProfile implements OnInit {
   loading = true;
   error: string | null = null;
   isCurrentUserProfile = false;
+  showEditDialog = false;
+  currentUserData: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,19 +33,30 @@ export class StudentProfile implements OnInit {
 
   ngOnInit(): void {
     const routeUrl = this.router.url;
+    console.log('Profile component initialized, route:', routeUrl);
 
-    if (routeUrl.includes('/students/profile')) {
+    if (routeUrl.includes('/profile')) {
       // This is the current user's profile - use auth service data
       this.isCurrentUserProfile = true;
-      const currentUser = this.authService.getCurrentUser();
+      console.log('Loading current user profile...');
 
-      if (currentUser) {
-        this.student$ = of(currentUser);
-        this.loading = false;
-      } else {
-        this.error = 'User not logged in';
-        this.loading = false;
-      }
+      // Always fetch fresh data instead of using cached data
+      this.authService.refreshCurrentUser().subscribe({
+        next: (user: User | null) => {
+          console.log('Fresh user data loaded:', user);
+          if (user) {
+            this.student$ = of(user);
+          } else {
+            this.error = 'User not found';
+          }
+          this.loading = false;
+        },
+        error: (err: any) => {
+          console.error('Error loading current user:', err);
+          this.error = 'Failed to load user profile';
+          this.loading = false;
+        }
+      });
     } else {
       // This is another user's profile - fetch by ID
       this.isCurrentUserProfile = false;
@@ -74,5 +88,35 @@ export class StudentProfile implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/students']);
+  }
+
+  openEditDialog(student: any): void {
+    this.currentUserData = student;
+    this.showEditDialog = true;
+  }
+
+  closeEditDialog(): void {
+    this.showEditDialog = false;
+    this.currentUserData = null;
+  }
+
+  onProfileUpdated(): void {
+    this.closeEditDialog();
+    // Refresh the current user data from the backend
+    if (this.isCurrentUserProfile) {
+      this.authService.refreshCurrentUser().subscribe({
+        next: (user: User | null) => {
+          if (user) {
+            this.student$ = of(user);
+          }
+        },
+        error: (err: any) => {
+          console.error('Error refreshing user data:', err);
+        }
+      });
+    } else {
+      // Refresh the student data by ID
+      this.student$ = this.userService.getUserById(this.currentUserData?.id);
+    }
   }
 }

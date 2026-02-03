@@ -25,6 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
   // Find enabled user by ID
   Optional<User> findByIdAndEnabledTrue(Long id);
   
+  // Find all enabled users
+  @Query("SELECT u FROM User u WHERE u.enabled = true")
+  List<User> findByEnabledTrue();
+  
   // Search students by college ID (exact match)
   Optional<User> findByCollageIdAndEnabledTrue(String collageId);
 }

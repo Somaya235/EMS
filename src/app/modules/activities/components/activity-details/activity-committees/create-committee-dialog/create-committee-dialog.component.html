@@ -1,0 +1,90 @@
+<div class="dialog-overlay" *ngIf="isVisible" (click)="onClose()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Create New Committee</h2>
+      <button class="close-btn" (click)="onClose()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="dialog-content">
+      <div class="form-group">
+        <label for="committee-name" class="form-label">Committee Name *</label>
+        <input
+          id="committee-name"
+          name="committeeName"
+          type="text"
+          class="form-input"
+          [(ngModel)]="formData.name"
+          placeholder="Enter committee name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="committee-description" class="form-label">Description</label>
+        <textarea
+          id="committee-description"
+          name="committeeDescription"
+          class="form-textarea"
+          [(ngModel)]="formData.description"
+          placeholder="Enter committee description"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="committee-head" class="form-label">Committee Head *</label>
+        <select
+          id="committee-head"
+          name="committeeHead"
+          class="form-select"
+          [(ngModel)]="formData.headId"
+          required
+        >
+          <option value="">Select a committee head</option>
+          <option *ngIf="loadingStudents" value="" disabled>Loading students...</option>
+          <option 
+            *ngFor="let student of students" 
+            [value]="student.id"
+          >
+            {{ student.fullName }} ({{ student.email }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="committee-director" class="form-label">Committee Director (Optional)</label>
+        <select
+          id="committee-director"
+          name="committeeDirector"
+          class="form-select"
+          [(ngModel)]="formData.directorId"
+        >
+          <option value="">Select a committee director</option>
+          <option *ngIf="loadingStudents" value="" disabled>Loading students...</option>
+          <option 
+            *ngFor="let student of students" 
+            [value]="student.id"
+          >
+            {{ student.fullName }} ({{ student.email }})
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+      <button 
+        class="btn btn-primary" 
+        (click)="onSave()" 
+        [disabled]="!formData.name.trim() || !formData.headId"
+      >
+        Create Committee
+      </button>
+    </div>
+  </div>
+</div>

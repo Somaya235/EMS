@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
   navigateToProfile(): void {
     console.log('Navigating to profile...');
     this.closeDropdown();
-    this.router.navigate(['/students/profile']).then(
+    this.router.navigate(['/profile']).then(
       (success) => {
         console.log('Navigation successful:', success);
       },

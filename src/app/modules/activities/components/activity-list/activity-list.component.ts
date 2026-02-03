@@ -10,11 +10,12 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { ApiService } from '../../../../core/services/api.service';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
 import { ActivityCreateComponent } from '../activity-create/activity-create.component';
+import { EditActivityDialogComponent } from '../edit-activity-dialog/edit-activity-dialog.component';
 
 @Component({
   selector: 'app-activity-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, ActivityCreateComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, ActivityCreateComponent, EditActivityDialogComponent],
   templateUrl: './activity-list.component.html',
   styleUrls: ['./activity-list.component.scss']
 })
@@ -27,6 +28,8 @@ export class ActivityListComponent implements OnInit, OnDestroy {
   error: string | null = null;
   searchTerm: string = '';
   showCreateDialog: boolean = false;
+  showEditDialog: boolean = false;
+  selectedActivity: Activity | null = null;
   activitiesCount: number = 0;
   private destroy$ = new Subject<void>();
 
@@ -232,5 +235,61 @@ export class ActivityListComponent implements OnInit, OnDestroy {
 
     // If no name available, return placeholder
     return 'No President';
+  }
+
+  // Check if current user is the president of this activity
+  isCurrentUserPresident(activity: Activity): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !activity.presidentName) {
+      return false;
+    }
+
+    // Compare current user's name with activity's president name
+    return currentUser.fullName === activity.presidentName;
+  }
+
+  // Edit activity - open dialog
+  editActivity(activity: Activity, event: MouseEvent): void {
+    event.stopPropagation(); // Prevent card click navigation
+
+    this.selectedActivity = activity;
+    this.showEditDialog = true;
+  }
+
+  // Dialog methods
+  closeEditDialog(): void {
+    this.showEditDialog = false;
+    this.selectedActivity = null;
+  }
+
+  saveActivity(formData: any): void {
+    if (!this.selectedActivity) return;
+
+    const updateData = {
+      name: formData.name,
+      description: formData.description,
+      category: formData.category,
+      vision: formData.vision,
+      mission: formData.mission,
+      presidentId: this.selectedActivity.presidentId // Include presidentId as required by backend
+    };
+
+    this.apiService.put(`/student-activities/${this.selectedActivity.id}`, updateData).subscribe({
+      next: (updatedActivity: any) => {
+        // Update the activity in the list
+        const index = this.activities.findIndex(a => a.id === this.selectedActivity!.id);
+        if (index !== -1) {
+          this.activities[index] = updatedActivity;
+          this.allActivities[index] = updatedActivity;
+        }
+
+        this.closeEditDialog();
+      },
+      error: (err: any) => {
+        console.error('Error updating activity:', err);
+        console.error('Error details:', err.error);
+        // Handle error (show toast, etc.)
+      }
+    });
   }
 }

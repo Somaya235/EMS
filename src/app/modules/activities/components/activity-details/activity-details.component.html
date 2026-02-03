@@ -1,6 +1,19 @@
 <app-header></app-header>
 
 <div class="activity-details-container">
+  <!-- Activity Header -->
+  <div *ngIf="!loading && !error && activity" class="activity-header">
+    <div class="activity-info">
+      <h1 class="activity-title">{{ activity.name }}</h1>
+      <p class="activity-description">{{ activity.description || 'Fostering innovation and excellence' }}</p>
+      <div class="activity-meta">
+        <span class="meta-item">342 Members</span>
+        <span class="meta-item">18 Events</span>
+        <span class="activity-tag">{{ activity.category || 'General' }}</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-state">
     <div class="loading-spinner"></div>
@@ -20,21 +33,6 @@
 
   <!-- Activity Details -->
   <div *ngIf="activity$ | async as activity; else loadingOrError" class="activity-content">
-    <!-- Header Section -->
-    <div class="activity-header">
-      <div class="header-left">
-        <h1 class="activity-title">{{ activity.name }}</h1>
-        <div class="activity-meta">
-          <span class="category-badge" [style.background-color]="getCategoryColor(activity.category)">
-            {{ activity.category }}
-          </span>
-          <span class="status-badge" [class.active]="activity.isActive">
-            {{ activity.isActive ? 'Active' : 'Inactive' }}
-          </span>
-        </div>
-      </div>
-    </div>
-
     <!-- Main Content -->
     <div class="activity-main">
       <!-- Left Content Container -->
@@ -42,63 +40,40 @@
           <!-- Description Card -->
           <div class="info-card">
             <h2 class="card-title">About this Activity</h2>
-            <p class="activity-description">{{ activity.description || 'No description available for this activity.' }}</p>
+            
+            <!-- Vision Section -->
+            <div class="vision-section">
+              <h3 class="section-title">Vision</h3>
+              <p class="section-content">{{ activity?.vision || 'No vision statement available.' }}</p>
+            </div>
+            
+            <!-- Mission Section -->
+            <div class="mission-section">
+              <h3 class="section-title">Mission</h3>
+              <p class="section-content">{{ activity?.mission || 'No mission statement available.' }}</p>
+            </div>
+            
+            <!-- Objectives Section -->
+            <div class="objectives-section">
+              <h3 class="section-title">Objectives</h3>
+              <p class="section-content">{{ activity.description || 'No objectives available.' }}</p>
+            </div>
           </div>
+          <app-activity-committees [activityId]="activity.id"></app-activity-committees>
         </div>
       
 
       <!-- Right Sidebar -->
       <div class="content-right">
-        <!-- Stats Card -->
-        <div class="stats-card">
-          <div class="stat-item">
-            <div class="stat-number">{{ activity.memberCount || 0 }}</div>
-            <div class="stat-label">Members</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <div class="stat-number">{{ activity.maxMembers || '∞' }}</div>
-            <div class="stat-label">Max Members</div>
-          </div>
-        </div>
-
-        <!-- President Card -->
-        <div class="president-card">
-          <h3 class="card-title">Activity President</h3>
-          <div class="president-info">
-            <div class="president-avatar">
-              {{ getPresidentInitials(activity.president?.fullName || '') }}
-            </div>
-            <div class="president-details">
-              <div class="president-name">{{ activity.president?.fullName || 'No President' }}</div>
-              <div class="president-role">Activity President</div>
-              <button class="contact-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                Contact
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- Activity Structure -->
+        <app-activity-structure [activityId]="activity.id"></app-activity-structure>
 
         <!-- Actions Card -->
         <div class="actions-card">
-          <button class="action-btn secondary" (click)="leaveActivity(activity.id)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="8.5" cy="7" r="4"></circle>
-              <line x1="23" y1="11" x2="17" y2="11"></line>
-            </svg>
-            Leave Activity
-          </button>
         </div>
       </div>
     </div>
 
-    <!-- Committees Section -->
-    <app-activity-committees [activityId]="activity.id"></app-activity-committees>
   </div>
 </div>
 

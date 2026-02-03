@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { environments } from '../../../enviroments/enviroment';
-import { TokenStorageService } from './token-storage.service';
-import { CommitteeResponseDTO, CommitteeMemberCount } from '../models/committee.model';
+import { TokenStorageService } from '../../../../../../core/services/token-storage.service';
+import { CommitteeResponseDTO, CommitteeMemberCount } from '../../../../../../core/models/committee.model';
+import { environments } from '../../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +59,17 @@ export class CommitteeService {
 
   getCommitteeMembers(committeeId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/committees/${committeeId}/members`);
+  }
+
+  createCommittee(committeeData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/committees`, committeeData, { headers: this.getHeaders() });
+  }
+
+  getAllStudents(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/committees/all-students`, { headers: this.getHeaders() });
+  }
+
+  deleteMemberFromCommittee(committeeId: number, memberId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/committees/${committeeId}/members/${memberId}`, { headers: this.getHeaders() });
   }
 }

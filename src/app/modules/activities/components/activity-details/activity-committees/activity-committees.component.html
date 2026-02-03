@@ -1,9 +1,6 @@
-<div class="activity-committees-section">
-  <div class="committees-header">
-    <h2 class="committees-title">Committees</h2>
-    <p class="committees-subtitle">Active committees for this activity</p>
-  </div>
-
+<div class="committees-section">
+  
+  
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-state">
     <div class="loading-spinner"></div>
@@ -21,74 +18,167 @@
   </div>
 
   <!-- Committees Grid -->
-  <div *ngIf="!loading && !error" class="committees-grid">
-
+  <div *ngIf="!loading && !error" class="committees-container">
+    <div class="section-header">
+      <h2 class="section-title">Committees</h2>
+      <button class="btn-create-committee" (click)="openCreateDialog()" *ngIf="isCurrentUserPresident">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Committee
+      </button>
+    </div>
+    <div class="committees-grid">
     <div 
       *ngFor="let committee of committeesWithMemberCount; let i = index" 
       class="committee-card"
+      [ngStyle]="getMemberCountColor(committee.memberCount || 0)"
+      (click)="onCommitteeClick(committee)"
     >
-      <!-- Committee Header -->
-      <div class="committee-header" [style.background-color]="getCommitteeColor(i)">
-        <div class="committee-info">
-          <h3 class="committee-name">{{ committee.name || 'Unnamed Committee' }}</h3>
-          <p class="committee-description">{{ committee.description || 'No description available' }}</p>
+      <h3 class="committee-name">{{ committee.name || 'Unnamed Committee' }}</h3>
+      <p class="committee-description">{{ committee.description || 'No description available' }}</p>
+      
+      <div class="committee-head">
+        <div class="head-avatar" [style.background-color]="getAvatarColor(committee.head?.fullName || 'No Head')">
+          {{ getInitials(committee.head?.fullName || 'No Head') }}
         </div>
-        <div class="member-count-badge">
-          <span class="member-count">{{ committee.memberCount || 0 }}</span>
-          <span class="member-label">members</span>
-        </div>
-      </div>
-
-      <!-- Committee Content -->
-      <div class="committee-content">
-        <!-- Committee Head -->
-        <div class="committee-head">
-          <div class="person-avatar" [style.background-color]="getAvatarColor(committee.head?.fullName || 'No Head')">
-            {{ getInitials(committee.head?.fullName || 'No Head') }}
-          </div>
-          <div class="person-info">
-            <span class="person-name">{{ committee.head?.fullName || 'No Head Assigned' }}</span>
-            <span class="person-role">Committee Head</span>
-          </div>
-        </div>
-
-        <!-- Committee Director -->
-        <div class="committee-director" *ngIf="committee.director">
-          <div class="person-avatar" [style.background-color]="getAvatarColor(committee.director.fullName || 'No Director')">
-            {{ getInitials(committee.director.fullName || 'No Director') }}
-          </div>
-          <div class="person-info">
-            <span class="person-name">{{ committee.director.fullName || 'No Director Assigned' }}</span>
-            <span class="person-role">Activity Director</span>
-          </div>
-        </div>
-
-        <!-- Committee Members (show count only for now) -->
-        <div class="committee-members-summary" *ngIf="committee.memberCount > 0">
-          <div class="members-info">
+        <span class="head-name">{{ committee.head?.fullName || 'No Head Assigned' }} - Head</span>
+        
+        <!-- Action Icons -->
+        <div class="action-icons">
+          <!-- Add Member Icon for Committee Head -->
+          <button class="add-member-btn" 
+                  *ngIf="isCurrentUserCommitteeHead(committee)"
+                  (click)="openAddMemberDialog(committee.id)"
+                  title="Add member to committee">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              <line x1="19" y1="8" x2="19" y2="14"></line>
+              <line x1="16" y1="11" x2="22" y2="11"></line>
             </svg>
-            <span>{{ committee.memberCount }} member{{ committee.memberCount !== 1 ? 's' : '' }}</span>
-          </div>
+          </button>
+          
+          <!-- Delete Member Icon for Committee Head -->
+          <button class="delete-member-btn" 
+                  *ngIf="isCurrentUserCommitteeHead(committee)"
+                  (click)="openDeleteMemberDialog(committee.id)"
+                  title="Manage committee members">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </button>
+          
+          <!-- Edit Icon for Activity President -->
+          <button class="edit-committee-btn" 
+                  *ngIf="isCurrentUserPresident"
+                  (click)="openEditDialog(committee)"
+                  title="Edit committee">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
         </div>
       </div>
+      
+      <div class="member-count" [ngStyle]="{'background-color': getMemberCountColor(committee.memberCount || 0)}">
+        {{ committee.memberCount || 0 }} members
+      </div>
+    </div>
     </div>
   </div>
 
   <!-- Empty State -->
   <div *ngIf="!loading && !error && committeesWithMemberCount.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line>
-        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-      </svg>
+    <p>No committees found for this activity.</p>
+  </div>
+
+  <!-- Create Committee Dialog -->
+  <app-create-committee-dialog
+    [isVisible]="showCreateDialog"
+    [activityId]="activityId"
+    (close)="closeCreateDialog()"
+    (save)="onCreateCommittee($event)"
+  ></app-create-committee-dialog>
+
+  <!-- Add Member Dialog -->
+  <app-add-member-dialog
+    [isVisible]="showAddMemberDialog"
+    [committeeId]="selectedCommitteeId"
+    (close)="closeAddMemberDialog()"
+    (memberAdded)="onMemberAdded()"
+  ></app-add-member-dialog>
+
+  <!-- Edit Committee Dialog -->
+  <app-edit-committee-dialog
+    [isVisible]="showEditDialog"
+    [committeeId]="selectedCommitteeForEdit?.id"
+    [committeeData]="selectedCommitteeForEdit"
+    (close)="closeEditDialog()"
+    (committeeUpdated)="onCommitteeUpdated()"
+  ></app-edit-committee-dialog>
+
+  <!-- Delete Member Dialog -->
+  <div class="dialog-overlay" *ngIf="showDeleteMemberDialog" (click)="closeDeleteMemberDialog()">
+    <div class="dialog-container" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3 class="dialog-title">Manage Committee Members</h3>
+        <button class="close-btn" (click)="closeDeleteMemberDialog()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="dialog-content">
+        <!-- Loading State -->
+        <div *ngIf="loadingMembers" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Loading committee members...</p>
+        </div>
+
+        <!-- Members List -->
+        <div *ngIf="!loadingMembers" class="members-list">
+          <div *ngIf="committeeMembers.length === 0" class="no-results">
+            <p>No members found in this committee.</p>
+          </div>
+          
+          <div *ngFor="let member of committeeMembers" class="member-item">
+            <div class="member-avatar" [style.background-color]="getAvatarColor(member.fullName)">
+              {{ getInitials(member.fullName) }}
+            </div>
+            <div class="member-info">
+              <div class="member-name">{{ member.fullName }}</div>
+              <div class="member-details">
+                <span class="member-email">{{ member.email }}</span>
+                <span class="member-id">ID: {{ member.collageId }}</span>
+              </div>
+            </div>
+            <div class="member-actions">
+              <button class="delete-btn" 
+                      (click)="deleteMemberFromCommittee(selectedCommitteeForDelete!, member.id)"
+                      title="Remove member from committee">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeDeleteMemberDialog()">Close</button>
+      </div>
     </div>
-    <h3>No committees found</h3>
-    <p>This activity doesn't have any committees yet.</p>
   </div>
 </div>
