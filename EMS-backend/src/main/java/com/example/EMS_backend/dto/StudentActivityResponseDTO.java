@@ -11,6 +11,9 @@ public class StudentActivityResponseDTO {
     private String category;
     private Long presidentId;
     private String presidentName;
+    private Boolean enabled;
+    private String vision;
+    private String mission;
     
     // Getters and Setters
     public Long getId() {
@@ -59,5 +62,29 @@ public class StudentActivityResponseDTO {
 
     public void setPresidentName(String presidentName) {
         this.presidentName = presidentName;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getVision() {
+        return vision;
+    }
+
+    public void setVision(String vision) {
+        this.vision = vision;
+    }
+
+    public String getMission() {
+        return mission;
+    }
+
+    public void setMission(String mission) {
+        this.mission = mission;
     }
 }

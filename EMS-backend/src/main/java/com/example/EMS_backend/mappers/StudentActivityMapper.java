@@ -28,6 +28,9 @@ public interface StudentActivityMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "enabled", source = "enabled")
+    @Mapping(target = "vision", source = "vision")
+    @Mapping(target = "mission", source = "mission")
     StudentActivity toEntity(StudentActivityRequestDTO dto);
     
     /**
@@ -44,5 +47,8 @@ public interface StudentActivityMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "enabled", source = "enabled")
+    @Mapping(target = "vision", source = "vision")
+    @Mapping(target = "mission", source = "mission")
     void updateEntityFromDTO(StudentActivityRequestDTO dto, @MappingTarget StudentActivity activity);
 }

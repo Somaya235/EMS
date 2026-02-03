@@ -20,6 +20,14 @@ public class StudentActivityRequestDTO {
 
     @NotNull(message = "President ID is required")
     private Long presidentId;
+
+    private Boolean enabled = true;
+
+    @Size(max = 2000, message = "Vision must not exceed 2000 characters")
+    private String vision;
+
+    @Size(max = 2000, message = "Mission must not exceed 2000 characters")
+    private String mission;
     
     // Getters and Setters
     public String getName() {
@@ -52,5 +60,29 @@ public class StudentActivityRequestDTO {
 
     public void setPresidentId(Long presidentId) {
         this.presidentId = presidentId;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getVision() {
+        return vision;
+    }
+
+    public void setVision(String vision) {
+        this.vision = vision;
+    }
+
+    public String getMission() {
+        return mission;
+    }
+
+    public void setMission(String mission) {
+        this.mission = mission;
     }
 }

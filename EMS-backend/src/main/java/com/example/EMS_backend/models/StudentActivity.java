@@ -16,6 +16,15 @@ public class StudentActivity extends AuditableEntity {
   @Column(nullable = false)
   private String category;
 
+  @Column(nullable = false)
+  private Boolean enabled = true;
+
+  @Column(columnDefinition = "TEXT")
+  private String vision;
+
+  @Column(columnDefinition = "TEXT")
+  private String mission;
+
   // One activity → one president
   @OneToOne
   @JoinColumn(name="president_id", unique=true)
@@ -60,5 +69,29 @@ public class StudentActivity extends AuditableEntity {
 
   public void setPresident(User president) {
     this.president = president;
+  }
+
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  public String getVision() {
+    return vision;
+  }
+
+  public void setVision(String vision) {
+    this.vision = vision;
+  }
+
+  public String getMission() {
+    return mission;
+  }
+
+  public void setMission(String mission) {
+    this.mission = mission;
   }
 }
