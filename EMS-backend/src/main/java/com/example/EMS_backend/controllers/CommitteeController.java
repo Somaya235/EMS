@@ -329,6 +329,8 @@ public class CommitteeController {
         Long currentUserId = userDetails.getId();
 
         committeeService.removeMemberFromCommittee(committeeId, memberId, currentUserId);
-        return ResponseEntity.ok(new MessageResponse("Member removed from committee successfully"));
+        return ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                .body(new MessageResponse("Member removed from committee successfully"));
     }
 }

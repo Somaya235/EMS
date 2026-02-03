@@ -257,6 +257,22 @@
   }
 }
 
+.info-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .detail-section {
+    flex: 1;
+    margin-bottom: 0;
+  }
+}
+
 .detail-section {
   margin-bottom: 2.5rem;
 

@@ -52,38 +52,43 @@
 
         <!-- Detailed Information -->
         <div class="profile-details">
-          <div class="detail-section">
-            <h2>Contact Information</h2>
-            <div class="detail-grid">
-              <div class="detail-item">
-                <label>Email</label>
-                <p>{{ student.email }}</p>
-              </div>
-              <div class="detail-item">
-                <label>Phone Number</label>
-                <p>{{ student.phoneNumber || 'Not provided' }}</p>
-              </div>
-              <div class="detail-item">
-                <label>National Number</label>
-                <p>{{ student.nationalNumber || 'Not provided' }}</p>
+          <!-- Contact and Academic Info Side by Side -->
+          <div class="info-row">
+            <!-- Contact Information -->
+            <div class="detail-section">
+              <h2>Contact Information</h2>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <label>Email</label>
+                  <p>{{ student.email }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Phone Number</label>
+                  <p>{{ student.phoneNumber || 'Not provided' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>National Number</label>
+                  <p>{{ student.nationalNumber || 'Not provided' }}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="detail-section">
-            <h2>Academic Information</h2>
-            <div class="detail-grid">
-              <div class="detail-item">
-                <label>Grade</label>
-                <p>{{ student.grade || 'Not provided' }}</p>
-              </div>
-              <div class="detail-item">
-                <label>College ID</label>
-                <p>{{ student.collageId || 'Not provided' }}</p>
-              </div>
-              <div class="detail-item">
-                <label>Date of Birth</label>
-                <p>{{ student.dateOfBirth ? (student.dateOfBirth | date:'longDate') : 'Not provided' }}</p>
+            <!-- Academic Information -->
+            <div class="detail-section">
+              <h2>Academic Information</h2>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <label>Grade</label>
+                  <p>{{ student.grade || 'Not provided' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>College ID</label>
+                  <p>{{ student.collageId || 'Not provided' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Date of Birth</label>
+                  <p>{{ student.dateOfBirth ? (student.dateOfBirth | date:'longDate') : 'Not provided' }}</p>
+                </div>
               </div>
             </div>
           </div>

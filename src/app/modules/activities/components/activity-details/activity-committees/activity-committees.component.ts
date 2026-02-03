@@ -302,6 +302,7 @@ export class ActivityCommitteesComponent implements OnInit, OnDestroy {
       ).subscribe({
         next: (response) => {
           console.log('Member removed successfully:', response);
+          this.loadCommitteeMembers(this.selectedCommitteeForDelete!); // Refresh dialog member list
           this.loadCommittees(); // Refresh the committees to update member counts
         },
         error: (err) => {

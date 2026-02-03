@@ -309,11 +309,9 @@ public class CommitteeService {
             committeeRepository.save(committee);
         }
 
-        // Remove the member from the committee (assuming there's a many-to-many relationship)
-        // This implementation depends on your data model. Adjust as needed.
-        // For now, we'll handle the case where the member is a director
-        // If there's a committee members relationship, you would need to implement that removal logic here
-        // For example: committeeMemberRepository.deleteByCommitteeIdAndUserId(committeeId, memberId);
+        // Remove the member from the committee's members list
+        committee.getMembers().remove(member);
+        committeeRepository.save(committee);
         
         // Log the removal action
         System.out.println("Member " + memberId + " removed from committee " + committeeId + " by head " + currentUserId);
