@@ -6,11 +6,9 @@ import com.example.EMS_backend.dto.OtpRequest;
 import com.example.EMS_backend.dto.RegisterRequest;
 import com.example.EMS_backend.models.OtpCode;
 import com.example.EMS_backend.models.RefreshToken;
-import com.example.EMS_backend.models.Role;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.repositories.OtpRepository;
 import com.example.EMS_backend.repositories.RefreshTokenRepository;
-import com.example.EMS_backend.repositories.RoleRepository;
 import com.example.EMS_backend.repositories.UserRepository;
 import com.example.EMS_backend.security.JwtUtils;
 import com.example.EMS_backend.security.UserDetailsImpl;
@@ -35,9 +33,6 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
@@ -80,10 +75,6 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
         user.setMajor(registerRequest.getMajor());
         user.setEnabled(false);
-
-        Role memberRole = roleRepository.findByName("member")
-                .orElseThrow(() -> new RuntimeException("Role not found: member"));
-        user.getRoles().add(memberRole);
 
         User savedUser = userRepository.save(user);
 

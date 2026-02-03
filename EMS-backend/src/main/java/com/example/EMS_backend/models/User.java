@@ -1,18 +1,14 @@
 package com.example.EMS_backend.models;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -61,13 +57,9 @@ public class User extends AuditableEntity {
   @Column(name="collage_id")
   private String collageId;
 
-  // Roles (M:N)
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-    joinColumns=@JoinColumn(name="user_id"),
-    inverseJoinColumns=@JoinColumn(name="role_id")
-  )
-  private Set<Role> roles = new HashSet<>();
+  @Enumerated(EnumType.STRING)
+  @Column(name="role", nullable=false, columnDefinition = "varchar(255) default 'STUDENT'")
+  private UserRole role = UserRole.STUDENT;
 
   // Getters and Setters
   public Long getId() {
@@ -100,14 +92,6 @@ public class User extends AuditableEntity {
 
   public void setPasswordHash(String passwordHash) {
     this.passwordHash = passwordHash;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
   }
 
   public Boolean getEnabled() {
@@ -180,5 +164,13 @@ public class User extends AuditableEntity {
 
   public void setCollageId(String collageId) {
     this.collageId = collageId;
+  }
+
+  public UserRole getRole() {
+    return role;
+  }
+
+  public void setRole(UserRole role) {
+    this.role = role;
   }
 }

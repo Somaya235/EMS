@@ -14,4 +14,5 @@ public interface ActivityDirectorRepository
   
   List<ActivityDirector> findByDirector(User director);
   List<ActivityDirector> findByActivityId(Long activityId);
+
 }

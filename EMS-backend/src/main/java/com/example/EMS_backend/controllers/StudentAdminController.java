@@ -36,7 +36,7 @@ public class StudentAdminController {
      * GET /admin/students
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('super_admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponseDTO>> getAllStudents() {
         List<User> allUsers = userRepository.findAll();
 

@@ -134,7 +134,7 @@ public class StudentActivityController {
      * PUT /student-activities/{activityId}/directors
      */
     @PutMapping("/{activityId}/directors")
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("@authorizationService.canManageActivity(principal.id, #activityId)")
     @Operation(summary = "Assign activity director", description = "Assign or update an Activity Director for a specific Student Activity. Only the president can perform this operation.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully assigned director"),
@@ -163,7 +163,7 @@ public class StudentActivityController {
      * PUT /student-activities/{activityId}
      */
     @PutMapping("/{activityId}")
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("@authorizationService.canManageActivity(principal.id, #activityId)")
     @Operation(summary = "Update student activity", description = "Update a student activity. Only the activity president can update it.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully updated activity"),

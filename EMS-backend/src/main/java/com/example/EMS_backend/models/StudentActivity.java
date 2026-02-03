@@ -30,6 +30,11 @@ public class StudentActivity extends AuditableEntity {
   @JoinColumn(name="president_id", unique=true)
   private User president;
 
+  // One activity → one web manager (optional)
+  @ManyToOne
+  @JoinColumn(name="web_manager_id")
+  private User webManager;
+
   // Getters and Setters
   public Long getId() {
     return id;
@@ -69,6 +74,14 @@ public class StudentActivity extends AuditableEntity {
 
   public void setPresident(User president) {
     this.president = president;
+  }
+
+  public User getWebManager() {
+    return webManager;
+  }
+
+  public void setWebManager(User webManager) {
+    this.webManager = webManager;
   }
 
   public Boolean getEnabled() {

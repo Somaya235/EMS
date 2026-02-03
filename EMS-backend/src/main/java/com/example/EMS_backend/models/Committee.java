@@ -1,16 +1,11 @@
 package com.example.EMS_backend.models;
-import java.util.HashSet;
-import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,20 +34,6 @@ public class Committee extends AuditableEntity {
   @ManyToOne
   @JoinColumn(name="director_id")
   private User director;
-
-  // Head (1:1)
-  @OneToOne
-  @JoinColumn(name="head_id", unique=true)
-  private User head;
-
-  // Members (M:N)
-  @ManyToMany
-  @JoinTable(
-    name="committee_members",
-    joinColumns=@JoinColumn(name="committee_id"),
-    inverseJoinColumns=@JoinColumn(name="committee_member")
-  )
-  private Set<User> members = new HashSet<>();
 
   // Manual getters and setters to avoid Lombok compilation issues
   public Long getId() {
@@ -89,21 +70,5 @@ public class Committee extends AuditableEntity {
 
   public void setDirector(User director) {
     this.director = director;
-  }
-
-  public User getHead() {
-    return head;
-  }
-
-  public void setHead(User head) {
-    this.head = head;
-  }
-
-  public Set<User> getMembers() {
-    return members;
-  }
-
-  public void setMembers(Set<User> members) {
-    this.members = members;
   }
 }

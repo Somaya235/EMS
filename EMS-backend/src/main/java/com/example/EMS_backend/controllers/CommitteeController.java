@@ -40,7 +40,7 @@ public class CommitteeController {
      * POST /api/committees
      */
     @PostMapping
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("@authorizationService.canManageActivity(principal.id, #requestDTO.activityId)")
     @Operation(summary = "Create committee", description = "Create a new committee. Only activity presidents can create committees.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully created committee"),
@@ -65,7 +65,7 @@ public class CommitteeController {
      * PUT /api/committees/{committeeId}/head
      */
     @PutMapping("/{committeeId}/head")
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("@authorizationService.canManageCommittee(principal.id, #committeeId)")
     @Operation(summary = "Assign committee head", description = "Assign a committee head. Only activity presidents can assign committee heads.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully assigned committee head"),
@@ -74,7 +74,7 @@ public class CommitteeController {
         @ApiResponse(responseCode = "403", description = "Forbidden - Only activity presidents can assign committee heads"),
         @ApiResponse(responseCode = "404", description = "Committee not found")
     })
-    public ResponseEntity<CommitteeResponseDTO> assignCommitteeHead(
+    public ResponseEntity<MessageResponse> assignCommitteeHead(
             @Parameter(description = "ID of the committee") @PathVariable Long committeeId,
             @Parameter(description = "User ID of the committee head") @RequestBody Long headUserId) {
         
@@ -82,8 +82,8 @@ public class CommitteeController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long currentUserId = userDetails.getId();
 
-        CommitteeResponseDTO responseDTO = committeeService.assignCommitteeHead(committeeId, headUserId, currentUserId);
-        return ResponseEntity.ok(responseDTO);
+        committeeService.assignCommitteeHead(committeeId, headUserId, currentUserId);
+        return ResponseEntity.ok(new MessageResponse("Committee head assigned successfully"));
     }
 
     /**
@@ -93,7 +93,7 @@ public class CommitteeController {
      * PUT /api/committees/{committeeId}/director
      */
     @PutMapping("/{committeeId}/director")
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("@authorizationService.canManageCommittee(principal.id, #committeeId)")
     @Operation(summary = "Assign committee director", description = "Assign a committee director. Only activity presidents can assign committee directors.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully assigned committee director"),
@@ -199,7 +199,8 @@ public class CommitteeController {
      * POST /api/committees/{committeeId}/members
      */
     @PostMapping("/{committeeId}/members")
-    public ResponseEntity<CommitteeResponseDTO> addMember(
+    @PreAuthorize("@authorizationService.canManageCommittee(principal.id, #committeeId)")
+    public ResponseEntity<MessageResponse> addMember(
             @PathVariable Long committeeId,
             @Valid @RequestBody AddMemberRequestDTO requestDTO) {
         
@@ -207,8 +208,8 @@ public class CommitteeController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         Long currentUserId = userDetails.getId();
 
-        CommitteeResponseDTO responseDTO = committeeService.addMember(committeeId, requestDTO, currentUserId);
-        return ResponseEntity.ok(responseDTO);
+        committeeService.addMember(committeeId, requestDTO, currentUserId);
+        return ResponseEntity.ok(new MessageResponse("Member added to committee successfully"));
     }
 
     /**
@@ -218,7 +219,7 @@ public class CommitteeController {
      * GET /api/committees/search-students?query={searchTerm}
      */
     @GetMapping("/search-students")
-    @PreAuthorize("hasAuthority('committee_head')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<UserResponseDTO>> searchStudents(@RequestParam String query) {
         List<User> students = committeeService.searchStudents(query);
         List<UserResponseDTO> studentDTOs = students.stream()
@@ -243,7 +244,7 @@ public class CommitteeController {
      * GET /api/committees/president
      */
     @GetMapping("/president")
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CommitteeResponseDTO>> getPresidentCommittees() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -284,7 +285,7 @@ public class CommitteeController {
      * PUT /api/committees/{committeeId}
      */
     @PutMapping("/{committeeId}")
-    @PreAuthorize("hasAuthority('activity_president')")
+    @PreAuthorize("@authorizationService.canManageCommittee(principal.id, #committeeId)")
     @Operation(summary = "Update committee", description = "Update committee details. Only activity presidents can update committees.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully updated committee"),

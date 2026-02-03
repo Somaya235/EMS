@@ -5,12 +5,10 @@ import com.example.EMS_backend.dto.ActivityDirectorRequestDTO;
 import com.example.EMS_backend.exceptions.*;
 import com.example.EMS_backend.mappers.StudentActivityMapper;
 import com.example.EMS_backend.mappers.ActivityDirectorMapper;
-import com.example.EMS_backend.models.Role;
 import com.example.EMS_backend.models.StudentActivity;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.models.ActivityDirector;
 import com.example.EMS_backend.models.ActivityDirectorId;
-import com.example.EMS_backend.repositories.RoleRepository;
 import com.example.EMS_backend.repositories.StudentActivityRepository;
 import com.example.EMS_backend.repositories.UserRepository;
 import com.example.EMS_backend.repositories.ActivityDirectorRepository;
@@ -27,17 +25,11 @@ import java.util.Optional;
 @Service
 public class StudentActivityService {
 
-    private static final String ACTIVITY_PRESIDENT_ROLE = "activity_president";
-    private static final String ACTIVITY_DIRECTOR_ROLE = "activity_director";
-
     @Autowired
     private StudentActivityRepository studentActivityRepository;
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private StudentActivityMapper studentActivityMapper;
@@ -55,7 +47,6 @@ public class StudentActivityService {
      * - Activity name must be unique
      * - President user must exist
      * - President can only be assigned to one activity
-     * - President must get the activity_president role
      */
     @Transactional
     public StudentActivity createActivityWithPresident(StudentActivityRequestDTO request) {
@@ -73,10 +64,6 @@ public class StudentActivityService {
             throw new PresidentAlreadyAssignedException(president.getId());
         }
 
-        // Load activity_president role
-        Role presidentRole = roleRepository.findByName(ACTIVITY_PRESIDENT_ROLE)
-                .orElseThrow(() -> new RoleNotFoundException(ACTIVITY_PRESIDENT_ROLE));
-
         // Map request to entity
         StudentActivity activity = studentActivityMapper.toEntity(request);
         activity.setCategory(request.getCategory());
@@ -84,12 +71,6 @@ public class StudentActivityService {
 
         // Persist activity
         StudentActivity savedActivity = studentActivityRepository.save(activity);
-
-        // Grant president role if not already present
-        if (!president.getRoles().contains(presidentRole)) {
-            president.getRoles().add(presidentRole);
-            userRepository.save(president);
-        }
 
         return savedActivity;
     }
@@ -160,7 +141,6 @@ public class StudentActivityService {
      * Business rules:
      * - Student Activity must exist.
      * - Director user must exist.
-     * - Director user must have the 'activity_director' role.
      * - Caller must be the president of the specified Student Activity.
      */
     @Transactional
@@ -177,13 +157,6 @@ public class StudentActivityService {
 
         User director = userRepository.findById(requestDTO.getDirectorId())
                 .orElseThrow(() -> new UserNotFoundException(requestDTO.getDirectorId()));
-
-        // Ensure the assigned director has the 'activity_director' role
-        boolean hasDirectorRole = director.getRoles().stream()
-                .anyMatch(role -> role.getName().equals(ACTIVITY_DIRECTOR_ROLE));
-        if (!hasDirectorRole) {
-            throw new RoleNotFoundException("Assigned user does not have the activity_director role.");
-        }
 
         // Check if an ActivityDirector entry already exists for this activity and director
         ActivityDirectorId activityDirectorId = new ActivityDirectorId(activityId, director.getId());

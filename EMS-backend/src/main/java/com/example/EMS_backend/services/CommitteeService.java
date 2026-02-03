@@ -7,9 +7,12 @@ import com.example.EMS_backend.dto.UserResponseDTO;
 import com.example.EMS_backend.exceptions.ResourceNotFoundException;
 import com.example.EMS_backend.exceptions.ForbiddenException;
 import com.example.EMS_backend.models.Committee;
+import com.example.EMS_backend.models.CommitteeMember;
+import com.example.EMS_backend.models.CommitteeMemberId;
 import com.example.EMS_backend.models.StudentActivity;
 import com.example.EMS_backend.models.User;
 import com.example.EMS_backend.repositories.CommitteeRepository;
+import com.example.EMS_backend.repositories.CommitteeMemberRepository;
 import com.example.EMS_backend.repositories.StudentActivityRepository;
 import com.example.EMS_backend.repositories.UserRepository;
 import com.example.EMS_backend.mappers.CommitteeMapper;
@@ -34,6 +37,9 @@ public class CommitteeService {
     private UserRepository userRepository;
 
     @Autowired
+    private CommitteeMemberRepository committeeMemberRepository;
+
+    @Autowired
     private CommitteeMapper committeeMapper;
 
     public CommitteeResponseDTO createCommittee(CommitteeRequestDTO requestDTO, Long currentUserId) {
@@ -45,10 +51,6 @@ public class CommitteeService {
         if (!activity.getPresident().getId().equals(currentUserId)) {
             throw new ForbiddenException("Only the president can create committees for this activity");
         }
-
-        // Validate head user exists
-        User headUser = userRepository.findById(requestDTO.getHeadId())
-                .orElseThrow(() -> new ResourceNotFoundException("Committee Head", requestDTO.getHeadId()));
 
         // Validate director user exists if provided
         User directorUser = null;
@@ -62,7 +64,6 @@ public class CommitteeService {
         committee.setName(requestDTO.getName());
         committee.setDescription(requestDTO.getDescription());
         committee.setActivity(activity);
-        committee.setHead(headUser);
         committee.setDirector(directorUser);
 
         // Save committee
@@ -71,7 +72,11 @@ public class CommitteeService {
         return committeeMapper.toResponseDTO(savedCommittee);
     }
 
-    public CommitteeResponseDTO assignCommitteeHead(Long committeeId, Long headUserId, Long currentUserId) {
+    /**
+     * Assign a committee head. The user must already be a member of the committee.
+     * This enforces the relationship: User → committee_members → head
+     */
+    public void assignCommitteeHead(Long committeeId, Long headUserId, Long currentUserId) {
         Committee committee = committeeRepository.findById(committeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Committee", committeeId));
 
@@ -84,11 +89,23 @@ public class CommitteeService {
         User headUser = userRepository.findById(headUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", headUserId));
 
-        // Assign head
-        committee.setHead(headUser);
-        Committee savedCommittee = committeeRepository.save(committee);
+        // Check if the user is already a member of this committee
+        CommitteeMemberId memberId = new CommitteeMemberId(committeeId, headUserId);
+        CommitteeMember member = committeeMemberRepository.findById(memberId)
+                .orElseThrow(() -> new ForbiddenException("User must be a committee member before being assigned as head"));
 
-        return committeeMapper.toResponseDTO(savedCommittee);
+        // Clear any existing head assignments for this committee
+        List<CommitteeMember> existingMembers = committeeMemberRepository.findByCommitteeId(committeeId);
+        for (CommitteeMember cm : existingMembers) {
+            if (cm.getHeadMember() != null) {
+                cm.setHeadMember(null);
+                committeeMemberRepository.save(cm);
+            }
+        }
+
+        // Assign the new head
+        member.setHeadMember(headUser);
+        committeeMemberRepository.save(member);
     }
 
     public CommitteeResponseDTO assignCommitteeDirector(Long committeeId, Long directorUserId, Long currentUserId) {
@@ -137,15 +154,17 @@ public class CommitteeService {
     public int countCommitteeMembers(Long committeeId) {
         Committee committee = committeeRepository.findById(committeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Committee", committeeId));
-        return committee.getMembers().size();
+        return committeeMemberRepository.countByCommitteeId(committeeId);
     }
 
     public List<UserResponseDTO> getCommitteeMembers(Long committeeId) {
         Committee committee = committeeRepository.findById(committeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Committee", committeeId));
         
-        return committee.getMembers().stream()
-                .map(member -> {
+        List<CommitteeMember> members = committeeMemberRepository.findByCommitteeId(committeeId);
+        return members.stream()
+                .map(committeeMember -> {
+                    User member = committeeMember.getMember();
                     UserResponseDTO dto = new UserResponseDTO();
                     dto.setId(member.getId());
                     dto.setFullName(member.getFullName());
@@ -156,6 +175,19 @@ public class CommitteeService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the committee head user (if assigned)
+     */
+    public User getCommitteeHead(Long committeeId) {
+        List<CommitteeMember> members = committeeMemberRepository.findByCommitteeId(committeeId);
+        for (CommitteeMember member : members) {
+            if (member.getHeadMember() != null) {
+                return member.getHeadMember();
+            }
+        }
+        return null;
     }
 
     public int countCommitteesInActivity(Long activityId) {
@@ -177,29 +209,26 @@ public class CommitteeService {
         committeeRepository.delete(committee);
     }
 
-    public CommitteeResponseDTO addMember(Long committeeId, AddMemberRequestDTO requestDTO, Long currentUserId) {
+    /**
+     * Add a member to a committee. Authorization check removed - will be handled by controller/authorization service.
+     */
+    public void addMember(Long committeeId, AddMemberRequestDTO requestDTO, Long currentUserId) {
         Committee committee = committeeRepository.findById(committeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Committee", committeeId));
-
-        // Check if current user is the committee head
-        if (committee.getHead() == null || !committee.getHead().getId().equals(currentUserId)) {
-            throw new ForbiddenException("Only the committee head can add members");
-        }
 
         // Find the student to add
         User student = userRepository.findByIdAndEnabledTrue(requestDTO.getStudentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Enabled Student", requestDTO.getStudentId()));
 
         // Check if student is already a member
-        if (committee.getMembers().contains(student)) {
+        CommitteeMemberId memberId = new CommitteeMemberId(committeeId, student.getId());
+        if (committeeMemberRepository.existsById(memberId)) {
             throw new ForbiddenException("Student is already a member of this committee");
         }
 
         // Add student to committee
-        committee.getMembers().add(student);
-        Committee savedCommittee = committeeRepository.save(committee);
-
-        return committeeMapper.toResponseDTO(savedCommittee);
+        CommitteeMember committeeMember = new CommitteeMember(committee, student);
+        committeeMemberRepository.save(committeeMember);
     }
 
     public List<User> searchStudents(String searchTerm) {
@@ -258,13 +287,6 @@ public class CommitteeService {
             throw new ForbiddenException("Only the president can update committees for this activity");
         }
 
-        // Validate head user exists if provided
-        if (requestDTO.getHeadId() != null) {
-            User headUser = userRepository.findById(requestDTO.getHeadId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Committee Head", requestDTO.getHeadId()));
-            committee.setHead(headUser);
-        }
-
         // Validate director user exists if provided
         if (requestDTO.getDirectorId() != null) {
             User directorUser = userRepository.findById(requestDTO.getDirectorId())
@@ -284,24 +306,17 @@ public class CommitteeService {
         return committeeMapper.toResponseDTO(savedCommittee);
     }
 
+    /**
+     * Remove a member from a committee. Authorization check removed - will be handled by controller/authorization service.
+     */
     public void removeMemberFromCommittee(Long committeeId, Long memberId, Long currentUserId) {
         // Validate committee exists
         Committee committee = committeeRepository.findById(committeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Committee", committeeId));
 
-        // Check if current user is the head of the committee
-        if (committee.getHead() == null || !committee.getHead().getId().equals(currentUserId)) {
-            throw new ForbiddenException("Only the committee head can remove members from this committee");
-        }
-
         // Validate member exists
         User member = userRepository.findById(memberId)
                 .orElseThrow(() -> new ResourceNotFoundException("Member", memberId));
-
-        // Check if the member is the head of the committee (prevent self-removal)
-        if (committee.getHead() != null && committee.getHead().getId().equals(memberId)) {
-            throw new ForbiddenException("Cannot remove the committee head. Please assign a new head first.");
-        }
 
         // Check if the member is the director of the committee
         if (committee.getDirector() != null && committee.getDirector().getId().equals(memberId)) {
@@ -309,11 +324,11 @@ public class CommitteeService {
             committeeRepository.save(committee);
         }
 
-        // Remove the member from the committee's members list
-        committee.getMembers().remove(member);
-        committeeRepository.save(committee);
+        // Remove the member from the committee_members table
+        CommitteeMemberId committeeMemberId = new CommitteeMemberId(committeeId, memberId);
+        committeeMemberRepository.deleteById(committeeMemberId);
         
         // Log the removal action
-        System.out.println("Member " + memberId + " removed from committee " + committeeId + " by head " + currentUserId);
+        System.out.println("Member " + memberId + " removed from committee " + committeeId + " by user " + currentUserId);
     }
 }

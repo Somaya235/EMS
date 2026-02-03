@@ -12,4 +12,5 @@ public interface CommitteeMemberRepository
 
   List<CommitteeMember> findByCommitteeId(Long committeeId);
   List<CommitteeMember> findByMemberId(Long memberId);
+  int countByCommitteeId(Long committeeId);
 }

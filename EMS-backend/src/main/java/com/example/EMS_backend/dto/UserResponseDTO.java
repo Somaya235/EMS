@@ -2,7 +2,6 @@ package com.example.EMS_backend.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * Response DTO for user data.
@@ -29,7 +28,7 @@ public class UserResponseDTO {
     private String cvAttachment;
     private String profileImage;
     private String collageId;
-    private Set<String> roles;
+    private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
@@ -130,14 +129,6 @@ public class UserResponseDTO {
         this.collageId = collageId;
     }
     
-    public Set<String> getRoles() {
-        return roles;
-    }
-    
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
-    
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -152,5 +143,13 @@ public class UserResponseDTO {
     
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

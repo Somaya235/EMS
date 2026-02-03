@@ -183,9 +183,6 @@ public class UserController {
         responseDTO.setCvAttachment(updatedUser.getCvAttachment());
         responseDTO.setProfileImage(updatedUser.getProfileImage());
         responseDTO.setCollageId(updatedUser.getCollageId());
-        responseDTO.setRoles(updatedUser.getRoles().stream()
-                .map(role -> role.getName())
-                .collect(java.util.stream.Collectors.toSet()));
         responseDTO.setCreatedAt(updatedUser.getCreatedAt());
         responseDTO.setUpdatedAt(updatedUser.getUpdatedAt());
 

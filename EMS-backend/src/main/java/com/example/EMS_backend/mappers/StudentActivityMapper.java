@@ -25,6 +25,7 @@ public interface StudentActivityMapper {
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "president", ignore = true)
+    @Mapping(target = "webManager", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -44,6 +45,7 @@ public interface StudentActivityMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "president", ignore = true)
+    @Mapping(target = "webManager", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

@@ -17,9 +17,6 @@ public class CommitteeRequestDTO {
     @NotNull(message = "Activity ID is required")
     private Long activityId;
     
-    @NotNull(message = "Committee head ID is required")
-    private Long headId;
-    
     private Long directorId; // Optional
     
     // Getters and Setters
@@ -45,14 +42,6 @@ public class CommitteeRequestDTO {
     
     public void setActivityId(Long activityId) {
         this.activityId = activityId;
-    }
-    
-    public Long getHeadId() {
-        return headId;
-    }
-    
-    public void setHeadId(Long headId) {
-        this.headId = headId;
     }
     
     public Long getDirectorId() {

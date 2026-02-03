@@ -45,7 +45,7 @@ public class StudentActivityAdminController {
      * POST /api/admin/student-activities
      */
     @PostMapping
-    @PreAuthorize("hasAuthority('super_admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create student activity with president", description = "Create a new student activity and assign its president. Only super admins can perform this operation.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully created activity and assigned president"),
@@ -77,7 +77,7 @@ public class StudentActivityAdminController {
    * PUT /student-activities/{id}
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthority('super_admin')")
+  @PreAuthorize("hasRole('ADMIN')")
   @Operation(summary = "Update student activity", description = "Update an existing student activity. Only super admins can perform this operation.")
   @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully updated activity"),

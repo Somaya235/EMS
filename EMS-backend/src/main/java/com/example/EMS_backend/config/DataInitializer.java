@@ -1,53 +1,33 @@
 package com.example.EMS_backend.config;
 
-import com.example.EMS_backend.models.Role;
-import com.example.EMS_backend.repositories.RoleRepository;
+import com.example.EMS_backend.models.User;
+import com.example.EMS_backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-        initializeRoles();
-    }
-
-    private void initializeRoles() {
-        if (roleRepository.count() == 0) {
-            Role superAdminRole = new Role();
-            superAdminRole.setName("super_admin");
-            roleRepository.save(superAdminRole);
-
-            Role activityPresidentRole = new Role();
-            activityPresidentRole.setName("activity_president");
-            roleRepository.save(activityPresidentRole);
-
-            Role webManagerRole = new Role();
-            webManagerRole.setName("web_manager");
-            roleRepository.save(webManagerRole);
-
-            Role activityDirectorRole = new Role();
-            activityDirectorRole.setName("activity_director");
-            roleRepository.save(activityDirectorRole);
-
-            Role committeeHeadRole = new Role();
-            committeeHeadRole.setName("committee_head");
-            roleRepository.save(committeeHeadRole);
-
-            Role committeeMemberRole = new Role();
-            committeeMemberRole.setName("committee_member");
-            roleRepository.save(committeeMemberRole);
-
-            Role memberRole = new Role();
-            memberRole.setName("member");
-            roleRepository.save(memberRole);
-
-            System.out.println("Initialized roles in database");
+        if (userRepository.count() == 0) {
+            User admin = new User();
+            admin.setFullName("System Admin");
+            admin.setEmail("admin@ems.com");
+            admin.setPasswordHash(passwordEncoder.encode("admin123"));
+            admin.setEnabled(true);
+            admin.setRole(UserRole.ADMIN);
+            userRepository.save(admin);
+            System.out.println("DataInitializer: Created default admin user (admin@ems.com / admin123)");
         }
+        System.out.println("DataInitializer: Using hybrid authorization (Role-based + Relationship-based)");
     }
 }

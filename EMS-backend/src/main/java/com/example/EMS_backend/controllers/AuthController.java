@@ -81,15 +81,6 @@ public class AuthController {
         userDTO.setCreatedAt(user.getCreatedAt());
         userDTO.setUpdatedAt(user.getUpdatedAt());
         
-        // Convert roles to string set
-        Set<String> roles = new HashSet<>();
-        if (user.getRoles() != null) {
-            for (var role : user.getRoles()) {
-                roles.add(role.getName());
-            }
-        }
-        userDTO.setRoles(roles);
-        
         return ResponseEntity.ok(userDTO);
     }
 
@@ -149,9 +140,7 @@ public class AuthController {
                             user.getId(),
                             user.getEmail(),
                             user.getFullName(),
-                            user.getRoles().stream()
-                                    .map(role -> role.getName())
-                                    .collect(java.util.stream.Collectors.toList())));
+                            java.util.Collections.emptyList())); // Empty list as roles are removed
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));

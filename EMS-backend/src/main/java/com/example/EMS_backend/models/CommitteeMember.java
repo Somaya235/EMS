@@ -32,6 +32,10 @@ public class CommitteeMember {
   @JoinColumn(name = "committee_member")
   private User member;
 
+  @ManyToOne
+  @JoinColumn(name = "head_member_id")
+  private User headMember;
+
   @Column(name = "joined_at")
   private LocalDateTime joinedAt = LocalDateTime.now();
 
@@ -66,6 +70,14 @@ public class CommitteeMember {
 
   public void setMember(User member) {
     this.member = member;
+  }
+
+  public User getHeadMember() {
+    return headMember;
+  }
+
+  public void setHeadMember(User headMember) {
+    this.headMember = headMember;
   }
 
   public LocalDateTime getJoinedAt() {
