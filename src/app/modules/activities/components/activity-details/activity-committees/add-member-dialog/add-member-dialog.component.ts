@@ -8,8 +8,7 @@ import { TokenStorageService } from '../../../../../../core/services/token-stora
   selector: 'app-add-member-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './add-member-dialog.component.html',
-  styleUrls: ['./add-member-dialog.component.scss']
+  templateUrl: './add-member-dialog.component.html'
 })
 export class AddMemberDialogComponent {
   @Input() committeeId: number | null = null;

@@ -13,8 +13,7 @@ import { HeaderComponent } from '../../../../shared/components/header/header.com
   standalone: true,
   imports: [CommonModule, FormsModule, HeaderComponent],
   providers: [UserService],
-  templateUrl: './student-list.component.html',
-  styleUrls: ['./student-list.component.scss']
+  templateUrl: './student-list.component.html'
 })
 export class StudentListComponent implements OnInit, OnDestroy {
   students: User[] = [];

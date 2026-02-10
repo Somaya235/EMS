@@ -1,78 +1,78 @@
-<div class="dialog-overlay" (click)="closeDialog()">
-  <div class="dialog-container" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h2>Create Student Activity</h2>
-      <button class="close-btn" (click)="closeDialog()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] backdrop-blur-[4px]" (click)="closeDialog()">
+  <div class="bg-white rounded-2xl w-[90%] max-w-[500px] max-h-[90vh] overflow-y-auto shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] animate-slideIn" (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <h2 class="m-0 text-xl font-semibold text-gray-800">Create Student Activity</h2>
+      <button class="bg-transparent border-none p-2 rounded-lg cursor-pointer text-gray-500 transition-all duration-200 hover:bg-gray-100 hover:text-gray-700" (click)="closeDialog()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
 
-    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="activity-form">
+    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="p-6">
       <!-- Error Message -->
-      <div *ngIf="error" class="error-message">
-        <p>{{ error }}</p>
+      <div *ngIf="error" class="bg-red-50 border border-red-300 text-red-600 p-3 rounded-lg mb-4">
+        <p class="m-0 text-sm">{{ error }}</p>
       </div>
 
       <!-- Activity Name -->
-      <div class="form-group">
-        <label for="name">Activity Name *</label>
+      <div class="mb-6">
+        <label for="name" class="block mb-2 font-medium text-gray-700 text-sm">Activity Name *</label>
         <input 
           id="name"
           type="text" 
           formControlName="name"
           placeholder="Enter activity name"
-          [class.error]="name?.invalid && name?.touched"
+          [class]="name?.invalid && name?.touched ? 'w-full p-3 border border-red-500 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)] placeholder:text-gray-400' : 'w-full p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-violet-500 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)] placeholder:text-gray-400'"
         >
-        <div *ngIf="name?.invalid && name?.touched" class="error-text">
+        <div *ngIf="name?.invalid && name?.touched" class="mt-1 text-xs text-red-500">
           <span *ngIf="name?.errors?.['required']">Activity name is required</span>
           <span *ngIf="name?.errors?.['minlength']">Name must be at least 3 characters</span>
         </div>
       </div>
 
       <!-- Description -->
-      <div class="form-group">
-        <label for="description">Description *</label>
+      <div class="mb-6">
+        <label for="description" class="block mb-2 font-medium text-gray-700 text-sm">Description *</label>
         <textarea 
           id="description"
           formControlName="description"
           placeholder="Describe the activity, its goals, and what students will do"
           rows="4"
-          [class.error]="description?.invalid && description?.touched"
+          [class]="description?.invalid && description?.touched ? 'w-full p-3 border border-red-500 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)] placeholder:text-gray-400 resize-y min-h-[100px]' : 'w-full p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-violet-500 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)] placeholder:text-gray-400 resize-y min-h-[100px]'"
         ></textarea>
-        <div *ngIf="description?.invalid && description?.touched" class="error-text">
+        <div *ngIf="description?.invalid && description?.touched" class="mt-1 text-xs text-red-500">
           <span *ngIf="description?.errors?.['required']">Description is required</span>
           <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
         </div>
       </div>
 
       <!-- Category -->
-      <div class="form-group">
-        <label for="category">Category *</label>
+      <div class="mb-6">
+        <label for="category" class="block mb-2 font-medium text-gray-700 text-sm">Category *</label>
         <select 
           id="category"
           formControlName="category"
-          [class.error]="category?.invalid && category?.touched"
+          [class]="category?.invalid && category?.touched ? 'w-full p-3 border border-red-500 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]' : 'w-full p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-violet-500 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]'"
         >
           <option value="">Select a category</option>
           <option *ngFor="let cat of categories" [value]="cat.value">
             {{ cat.name }}
           </option>
         </select>
-        <div *ngIf="category?.invalid && category?.touched" class="error-text">
+        <div *ngIf="category?.invalid && category?.touched" class="mt-1 text-xs text-red-500">
           <span *ngIf="category?.errors?.['required']">Category is required</span>
         </div>
       </div>
 
       <!-- President -->
-      <div class="form-group">
-        <label for="presidentId">President *</label>
+      <div class="mb-6">
+        <label for="presidentId" class="block mb-2 font-medium text-gray-700 text-sm">President *</label>
         <select 
           id="presidentId"
           formControlName="presidentId"
-          [class.error]="presidentId?.invalid && presidentId?.touched"
+          [class]="presidentId?.invalid && presidentId?.touched ? 'w-full p-3 border border-red-500 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]' : 'w-full p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-violet-500 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.1)]'"
           [disabled]="studentsLoading"
         >
           <option value="">
@@ -82,16 +82,16 @@
             {{ student.fullName }}
           </option>
         </select>
-        <div *ngIf="presidentId?.invalid && presidentId?.touched" class="error-text">
+        <div *ngIf="presidentId?.invalid && presidentId?.touched" class="mt-1 text-xs text-red-500">
           <span *ngIf="presidentId?.errors?.['required']">President is required</span>
         </div>
       </div>
 
       <!-- Form Actions -->
-      <div class="form-actions">
+      <div class="flex gap-4 justify-end mt-8 pt-4 border-t border-gray-200">
         <button 
           type="button" 
-          class="btn btn-secondary" 
+          class="p-3 px-6 rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 border-none inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 text-gray-700 hover:not(:disabled):bg-gray-200" 
           (click)="closeDialog()"
           [disabled]="loading"
         >
@@ -99,12 +99,12 @@
         </button>
         <button 
           type="submit" 
-          class="btn btn-primary"
+          class="p-3 px-6 rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 border-none inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-violet-500 to-violet-600 text-white hover:not(:disabled):bg-gradient-to-br hover:not(:disabled):from-violet-600 hover:not(:disabled):to-violet-700 hover:not(:disabled):-translate-y-px hover:not(:disabled):shadow-[0_4px_12px_rgba(139,92,246,0.3)]"
           [disabled]="loading || activityForm.invalid"
         >
           <span *ngIf="!loading">Create Activity</span>
-          <span *ngIf="loading" class="loading-spinner">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <span *ngIf="loading" class="flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-spin">
               <path d="M21 12a9 9 0 11-6.219-8.56"/>
             </svg>
             Creating...

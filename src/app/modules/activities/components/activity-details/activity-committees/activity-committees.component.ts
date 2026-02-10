@@ -15,8 +15,7 @@ import { Activity } from '../../../../../core/models/activity.model';
   selector: 'app-activity-committees',
   standalone: true,
   imports: [CommonModule, CreateCommitteeDialogComponent, AddMemberDialogComponent, EditCommitteeDialogComponent],
-  templateUrl: './activity-committees.component.html',
-  styleUrls: ['./activity-committees.component.scss']
+  templateUrl: './activity-committees.component.html'
 })
 export class ActivityCommitteesComponent implements OnInit, OnDestroy {
   @Input() activityId!: number;

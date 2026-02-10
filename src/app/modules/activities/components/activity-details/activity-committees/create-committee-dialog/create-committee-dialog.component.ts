@@ -8,8 +8,7 @@ import { Observable } from 'rxjs';
   selector: 'app-create-committee-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './create-committee-dialog.component.html',
-  styleUrls: ['./create-committee-dialog.component.scss']
+  templateUrl: './create-committee-dialog.component.html'
 })
 export class CreateCommitteeDialogComponent implements OnInit {
   @Input() isVisible: boolean = false;

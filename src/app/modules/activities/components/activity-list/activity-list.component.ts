@@ -17,7 +17,6 @@ import { EditActivityDialogComponent } from '../edit-activity-dialog/edit-activi
   standalone: true,
   imports: [CommonModule, FormsModule, HeaderComponent, ActivityCreateComponent, EditActivityDialogComponent],
   templateUrl: './activity-list.component.html',
-  styleUrls: ['./activity-list.component.scss']
 })
 export class ActivityListComponent implements OnInit, OnDestroy {
   activities: Activity[] = [];

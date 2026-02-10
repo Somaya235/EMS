@@ -7,8 +7,7 @@ import { Activity } from '../../../../core/models/activity.model';
   selector: 'app-edit-activity-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './edit-activity-dialog.component.html',
-  styleUrls: ['./edit-activity-dialog.component.scss']
+  templateUrl: './edit-activity-dialog.component.html'
 })
 export class EditActivityDialogComponent {
   @Input() activity: Activity | null = null;

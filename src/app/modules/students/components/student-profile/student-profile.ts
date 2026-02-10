@@ -13,7 +13,6 @@ import { EditProfileDialogComponent } from './edit-profile-dialog/edit-profile-d
   standalone: true,
   imports: [CommonModule, HeaderComponent, EditProfileDialogComponent],
   templateUrl: './student-profile.html',
-  styleUrl: './student-profile.css',
   providers: [UserService]
 })
 export class StudentProfile implements OnInit {

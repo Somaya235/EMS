@@ -1,47 +1,47 @@
-<div class="dialog-overlay" *ngIf="isVisible" (click)="onClose()">
-  <div class="dialog-container" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h2>Create New Committee</h2>
-      <button class="close-btn" (click)="onClose()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]" *ngIf="isVisible" (click)="onClose()">
+  <div class="bg-white rounded-lg w-[90%] max-w-[500px] max-h-[90vh] overflow-y-auto shadow-[0_10px_25px_rgba(0,0,0,0.2)] animate-slide-in" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center p-5 border-b border-gray-200">
+      <h2 class="m-0 text-xl font-semibold text-gray-900">Create New Committee</h2>
+      <button class="bg-transparent border-none p-1 rounded cursor-pointer flex items-center justify-center text-gray-600 hover:bg-gray-100 hover:text-gray-700" (click)="onClose()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
 
-    <div class="dialog-content">
-      <div class="form-group">
-        <label for="committee-name" class="form-label">Committee Name *</label>
+    <div class="p-6">
+      <div class="mb-5 last:mb-0">
+        <label for="committee-name" class="block mb-2 font-medium text-gray-700 text-sm">Committee Name *</label>
         <input
           id="committee-name"
           name="committeeName"
           type="text"
-          class="form-input"
+          class="w-full p-2.5 px-3 border border-gray-300 rounded-md text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] placeholder:text-gray-400"
           [(ngModel)]="formData.name"
           placeholder="Enter committee name"
           required
         />
       </div>
 
-      <div class="form-group">
-        <label for="committee-description" class="form-label">Description</label>
+      <div class="mb-5 last:mb-0">
+        <label for="committee-description" class="block mb-2 font-medium text-gray-700 text-sm">Description</label>
         <textarea
           id="committee-description"
           name="committeeDescription"
-          class="form-textarea"
+          class="w-full p-2.5 px-3 border border-gray-300 rounded-md text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] placeholder:text-gray-400 resize-y min-h-[100px]"
           [(ngModel)]="formData.description"
           placeholder="Enter committee description"
           rows="4"
         ></textarea>
       </div>
 
-      <div class="form-group">
-        <label for="committee-head" class="form-label">Committee Head *</label>
+      <div class="mb-5 last:mb-0">
+        <label for="committee-head" class="block mb-2 font-medium text-gray-700 text-sm">Committee Head *</label>
         <select
           id="committee-head"
           name="committeeHead"
-          class="form-select"
+          class="w-full p-2.5 px-3 border border-gray-300 rounded-md text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)]"
           [(ngModel)]="formData.headId"
           required
         >
@@ -56,12 +56,12 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="committee-director" class="form-label">Committee Director (Optional)</label>
+      <div class="mb-5 last:mb-0">
+        <label for="committee-director" class="block mb-2 font-medium text-gray-700 text-sm">Committee Director (Optional)</label>
         <select
           id="committee-director"
           name="committeeDirector"
-          class="form-select"
+          class="w-full p-2.5 px-3 border border-gray-300 rounded-md text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)]"
           [(ngModel)]="formData.directorId"
         >
           <option value="">Select a committee director</option>
@@ -76,10 +76,10 @@
       </div>
     </div>
 
-    <div class="dialog-footer">
-      <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+    <div class="flex justify-end gap-3 p-5 border-t border-gray-200 bg-gray-50">
+      <button class="p-2.5 px-4 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 border border-transparent bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed" (click)="onClose()">Cancel</button>
       <button 
-        class="btn btn-primary" 
+        class="p-2.5 px-4 rounded-md text-sm font-medium cursor-pointer transition-all duration-200 border border-transparent bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-60 disabled:cursor-not-allowed" 
         (click)="onSave()" 
         [disabled]="!formData.name.trim() || !formData.headId"
       >

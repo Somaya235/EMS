@@ -17,7 +17,6 @@ export interface ActivityCreateRequest {
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './activity-create.component.html',
-  styleUrls: ['./activity-create.component.scss']
 })
 export class ActivityCreateComponent implements OnInit {
   @Output() activityCreated = new EventEmitter<void>();

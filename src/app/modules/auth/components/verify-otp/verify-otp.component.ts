@@ -10,7 +10,6 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-verify-otp',
   templateUrl: './verify-otp.component.html',
-  styleUrls: ['./verify-otp.component.css'],
   imports: [ReactiveFormsModule, CommonModule, RouterLink]
 })
 export class VerifyOtpComponent implements OnInit {

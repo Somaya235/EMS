@@ -13,8 +13,7 @@ import { ActivityStructureComponent } from "./activity-structure/activity-struct
   selector: 'app-activity-details',
   standalone: true,
   imports: [CommonModule, HeaderComponent, ActivityCommitteesComponent, ActivityStructureComponent],
-  templateUrl: './activity-details.component.html',
-  styleUrls: ['./activity-details.component.scss']
+  templateUrl: './activity-details.component.html'
 })
 export class ActivityDetailsComponent implements OnInit {
   activity$!: Observable<Activity | null>;

@@ -14,7 +14,6 @@ import { takeUntil } from 'rxjs/operators';
     standalone: true,
     imports: [CommonModule, DatePipe, HeaderComponent],
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     currentUser: User | null = null;

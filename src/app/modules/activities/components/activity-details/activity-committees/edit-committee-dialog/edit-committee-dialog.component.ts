@@ -7,8 +7,7 @@ import { ApiService } from '../../../../../../core/services/api.service';
   selector: 'app-edit-committee-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './edit-committee-dialog.component.html',
-  styleUrls: ['./edit-committee-dialog.component.scss']
+  templateUrl: './edit-committee-dialog.component.html'
 })
 export class EditCommitteeDialogComponent {
   @Input() committeeId: number | null = null;

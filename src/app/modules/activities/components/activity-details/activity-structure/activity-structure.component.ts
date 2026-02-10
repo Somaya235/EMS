@@ -29,8 +29,7 @@ interface ActivityStructure {
   selector: 'app-activity-structure',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './activity-structure.component.html',
-  styleUrls: ['./activity-structure.component.scss']
+  templateUrl: './activity-structure.component.html'
 })
 export class ActivityStructureComponent implements OnInit, OnDestroy {
   @Input() activityId!: number;

@@ -1,77 +1,76 @@
-<div class="dialog-overlay" *ngIf="isVisible" (click)="closeDialog()">
-  <div class="dialog-container" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h3 class="dialog-title">Add Member to Committee</h3>
-      <button class="close-btn" (click)="closeDialog()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] backdrop-blur-sm" *ngIf="isVisible" (click)="closeDialog()">
+  <div class="bg-white rounded-xl w-[90%] max-w-[600px] max-h-[80vh] flex flex-col shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] overflow-hidden animate-slide-in" (click)="$event.stopPropagation()">
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <h3 class="text-xl font-bold text-gray-900 m-0">Add Member to Committee</h3>
+      <button class="bg-transparent border-none p-2 rounded-lg cursor-pointer text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-700" (click)="closeDialog()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
 
-    <div class="dialog-content">
+    <div class="flex-1 p-6 overflow-y-auto">
       <!-- Loading State -->
-      <div *ngIf="loading" class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Loading students...</p>
+      <div *ngIf="loading" class="flex flex-col items-center justify-center py-12 text-center">
+        <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+        <p class="text-sm text-gray-600 m-0">Loading students...</p>
       </div>
 
       <!-- Error State -->
-      <div *ngIf="error" class="error-state">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div *ngIf="error" class="flex flex-col items-center justify-center py-12 text-center">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500 mb-4">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="8" x2="12" y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
         </svg>
-        <p>{{ error }}</p>
+        <p class="text-sm text-gray-600 m-0">{{ error }}</p>
       </div>
 
       <!-- Student List -->
-      <div *ngIf="!loading && !error" class="student-list">
+      <div *ngIf="!loading && !error" class="flex flex-col gap-4">
         <!-- Search Bar -->
-        <div class="search-section">
-          <div class="search-input-wrapper">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input 
-              type="text" 
-              class="search-input" 
-              placeholder="Search students by name, email, or ID..."
-              [(ngModel)]="searchTerm"
-              (input)="onSearchChange()"
-            >
-          </div>
+        <div class="relative flex items-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="absolute left-4 text-gray-400 w-5 h-5 z-10">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            class="w-full p-3 pl-12 border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] placeholder:text-gray-400" 
+            placeholder="Search students by name, email, or ID..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+          >
         </div>
 
         <!-- Students -->
-        <div class="students-container">
-          <div *ngIf="filteredStudents.length === 0" class="no-results">
-            <p>No students found matching your search.</p>
+        <div class="max-h-[400px] overflow-y-auto border border-gray-200 rounded-lg">
+          <div *ngIf="filteredStudents.length === 0" class="p-8 text-center text-gray-600 text-sm">
+            <p class="m-0">No students found matching your search.</p>
           </div>
           
-          <div *ngFor="let student of filteredStudents" class="student-item" 
-               [class.selected]="isStudentSelected(student.id)"
+          <div *ngFor="let student of filteredStudents" class="flex items-center p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 last:border-b-0 hover:bg-gray-50" 
+               [class]="isStudentSelected(student.id) ? 'bg-blue-50 border-blue-500' : ''"
                (click)="selectStudent(student.id)">
-            <div class="student-checkbox">
+            <div class="mr-4">
               <input type="checkbox" 
+                     class="w-[18px] h-[18px] accent-blue-500 cursor-pointer"
                      [checked]="isStudentSelected(student.id)"
                      (change)="selectStudent(student.id)"
                      (click)="$event.stopPropagation()">
             </div>
-            <div class="student-avatar" [style.background-color]="getAvatarColor(student.fullName)">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-4 flex-shrink-0" [style.background-color]="getAvatarColor(student.fullName)">
               {{ getInitials(student.fullName) }}
             </div>
-            <div class="student-info">
-              <div class="student-name">{{ student.fullName }}</div>
-              <div class="student-details">
-                <span class="student-email">{{ student.email }}</span>
-                <span class="student-id">ID: {{ student.collageId }}</span>
+            <div class="flex-1">
+              <div class="font-semibold text-gray-900 text-sm mb-1">{{ student.fullName }}</div>
+              <div class="flex flex-col gap-0.5">
+                <span class="text-xs text-gray-600">{{ student.email }}</span>
+                <span class="text-xs text-gray-400">ID: {{ student.collageId }}</span>
               </div>
             </div>
-            <div class="selection-indicator">
+            <div class="selection-indicator ml-2" [class]="isStudentSelected(student.id) ? 'block text-blue-500' : 'hidden'">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
@@ -81,12 +80,12 @@
       </div>
     </div>
 
-    <div class="dialog-footer">
-      <button class="btn-cancel" (click)="closeDialog()">Cancel</button>
-      <button class="btn-add" 
+    <div class="flex justify-end gap-3 p-6 border-t border-gray-200">
+      <button class="flex items-center gap-2 p-3 px-5 rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 border-none bg-gray-100 text-gray-700 hover:bg-gray-200" (click)="closeDialog()">Cancel</button>
+      <button class="flex items-center gap-2 p-3 px-5 rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 border-none bg-gradient-to-r from-blue-500 to-violet-500 text-white hover:not(:disabled):bg-gradient-to-r hover:not(:disabled):from-blue-600 hover:not(:disabled):to-violet-600 hover:not(:disabled):-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed" 
               [disabled]="selectedStudentIds.length === 0 || loading"
               (click)="addMembers()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
