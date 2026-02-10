@@ -1,0 +1,127 @@
+<div class="system-settings-container">
+  <div class="page-header">
+    <h1>System Settings</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" (click)="resetSettings()">
+        <i class="fas fa-undo"></i> Reset to Defaults
+      </button>
+      <button class="btn btn-primary" (click)="saveSettings()">
+        <i class="fas fa-save"></i> Save Settings
+      </button>
+    </div>
+  </div>
+
+  <div class="settings-form">
+    <div class="settings-section">
+      <h3>General Settings</h3>
+      <div class="form-group">
+        <label for="siteName">Site Name</label>
+        <input
+          type="text"
+          id="siteName"
+          [(ngModel)]="settings.siteName"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="siteDescription">Site Description</label>
+        <textarea
+          id="siteDescription"
+          [(ngModel)]="settings.siteDescription"
+          class="form-control"
+          rows="3"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>User Registration</h3>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="settings.allowRegistration"
+          />
+          Allow new user registration
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="settings.emailVerification"
+          />
+          Require email verification
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>System Configuration</h3>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="settings.maintenanceMode"
+          />
+          Maintenance Mode
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label for="maxFileSize">Max File Size (MB)</label>
+        <input
+          type="number"
+          id="maxFileSize"
+          [(ngModel)]="settings.maxFileSize"
+          class="form-control"
+          min="1"
+          max="100"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="sessionTimeout">Session Timeout (minutes)</label>
+        <input
+          type="number"
+          id="sessionTimeout"
+          [(ngModel)]="settings.sessionTimeout"
+          class="form-control"
+          min="5"
+          max="1440"
+        />
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Email Configuration</h3>
+      <div class="form-group">
+        <label for="smtpHost">SMTP Host</label>
+        <input
+          type="text"
+          id="smtpHost"
+          class="form-control"
+          placeholder="smtp.example.com"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="smtpPort">SMTP Port</label>
+        <input
+          type="number"
+          id="smtpPort"
+          class="form-control"
+          placeholder="587"
+        />
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-info" (click)="testEmailSettings()">
+          <i class="fas fa-envelope"></i> Test Email Settings
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

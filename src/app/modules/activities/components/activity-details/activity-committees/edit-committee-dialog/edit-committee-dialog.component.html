@@ -1,0 +1,94 @@
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] backdrop-blur-sm" *ngIf="isVisible" (click)="closeDialog()">
+  <div class="bg-white rounded-xl w-[90%] max-w-[600px] max-h-[90vh] overflow-hidden shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] animate-slide-in" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100">
+      <h2 class="m-0 text-xl font-bold text-gray-900">Edit Committee</h2>
+      <button class="bg-transparent border-none p-2 rounded-lg cursor-pointer text-gray-600 transition-all duration-200 hover:bg-gray-200 hover:text-gray-700" (click)="closeDialog()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="p-6 max-h-[60vh] overflow-y-auto">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex flex-col items-center justify-center py-12 text-center">
+        <div class="w-10 h-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+        <p class="text-sm text-gray-600 m-0">Loading...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="flex flex-col items-center justify-center py-12 text-center">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-500 mb-4">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p class="text-sm text-gray-600 m-0">{{ error }}</p>
+      </div>
+
+      <!-- Form -->
+      <div *ngIf="!loading && !error" class="flex flex-col gap-6">
+        <div class="flex flex-col">
+          <label for="committee-name" class="font-semibold text-gray-700 mb-2 text-sm">Committee Name *</label>
+          <input 
+            id="committee-name"
+            type="text" 
+            class="p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] placeholder:text-gray-400 bg-white"
+            [(ngModel)]="formData.name" 
+            placeholder="Enter committee name"
+            required
+          >
+        </div>
+
+        <div class="flex flex-col">
+          <label for="committee-description" class="font-semibold text-gray-700 mb-2 text-sm">Description</label>
+          <textarea 
+            id="committee-description"
+            class="p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] placeholder:text-gray-400 bg-white resize-y min-h-[80px]"
+            [(ngModel)]="formData.description" 
+            placeholder="Enter committee description"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="committee-head" class="font-semibold text-gray-700 mb-2 text-sm">Committee Head</label>
+          <select id="committee-head" 
+                  class="p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] bg-white cursor-pointer appearance-none pr-10"
+                  [(ngModel)]="formData.headId">
+            <option [ngValue]="null">Select Committee Head (Optional)</option>
+            <option *ngFor="let user of availableUsers" [ngValue]="user.id">
+              {{ user.fullName }} ({{ user.email }})
+            </option>
+          </select>
+        </div>
+
+        <div class="flex flex-col">
+          <label for="committee-director" class="font-semibold text-gray-700 mb-2 text-sm">Committee Director</label>
+          <select id="committee-director" 
+                  class="p-3 border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] bg-white cursor-pointer appearance-none pr-10"
+                  [(ngModel)]="formData.directorId">
+            <option [ngValue]="null">Select Committee Director (Optional)</option>
+            <option *ngFor="let user of availableUsers" [ngValue]="user.id">
+              {{ user.fullName }} ({{ user.email }})
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4 p-6 border-t border-gray-200 bg-gray-50">
+      <button class="flex items-center gap-2 p-3 px-5 rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 border-none bg-gray-100 text-gray-700 hover:bg-gray-200" (click)="closeDialog()">Cancel</button>
+      <button class="flex items-center gap-2 p-3 px-5 rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 border-none bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:not(:disabled):bg-gradient-to-r hover:not(:disabled):from-blue-600 hover:not(:disabled):to-blue-700 hover:not(:disabled):-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0" 
+              [disabled]="!formData.name.trim() || loading"
+              (click)="updateCommittee()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        Update Committee
+      </button>
+    </div>
+  </div>
+</div>

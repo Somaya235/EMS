@@ -1,0 +1,243 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  height: 64px;
+}
+
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .logo {
+    width: 32px;
+    height: 32px;
+    background: #8b5cf6;
+    border-radius: 4px;
+  }
+
+  .app-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .nav-item {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #6b7280;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    &.active {
+      background: #8b5cf6 !important;
+      color: white !important;
+    }
+  }
+}
+
+.user-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  &.dropdown-open {
+    background: #f3f4f6;
+  }
+
+  .user-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .dropdown-arrow {
+    color: #6b7280;
+    transition: transform 0.3s ease;
+
+    &.rotate {
+      transform: rotate(180deg);
+    }
+  }
+
+  .notification-dot {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #8b5cf6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+
+    .user-name {
+      font-weight: 500;
+      color: #1f2937;
+      font-size: 0.875rem;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e5e7eb;
+    min-width: 280px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+
+    .dropdown-user-avatar {
+      width: 48px;
+      height: 48px;
+      background: #8b5cf6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .dropdown-user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .dropdown-user-name {
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 0.95rem;
+      }
+
+      .dropdown-user-role {
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+    }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: #f3f4f6;
+    margin: 0.25rem 0;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f9fafb;
+      color: #1f2937;
+    }
+
+    svg {
+      flex-shrink: 0;
+      color: #6b7280;
+    }
+
+    &.logout-item {
+      color: #dc2626;
+
+      &:hover {
+        background: #fef2f2;
+        color: #b91c1c;
+
+        svg {
+          color: #dc2626;
+        }
+      }
+
+      svg {
+        color: #dc2626;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 1rem;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .user-info {
+    display: none;
+  }
+}

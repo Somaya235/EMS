@@ -1,0 +1,71 @@
+<div class="user-management-container">
+  <div class="page-header">
+    <h1>User Management</h1>
+    <button class="btn btn-primary">
+      <i class="fas fa-plus"></i> Add User
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (keyup)="searchUsers()"
+      placeholder="Search users..."
+      class="form-control"
+    />
+    <button class="btn btn-secondary" (click)="loadUsers()">
+      <i class="fas fa-refresh"></i> Refresh
+    </button>
+  </div>
+
+  <div class="users-table-container">
+    <div *ngIf="loading" class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i> Loading users...
+    </div>
+
+    <table *ngIf="!loading" class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.fullName }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span *ngFor="let role of user.roles" class="role-badge">
+              {{ role }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date:'medium' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-info" (click)="editUser(user)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-warning" (click)="toggleUserStatus(user)">
+                <i class="fas fa-toggle-on"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteUser(user)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && users.length === 0" class="no-data">
+      <i class="fas fa-users"></i>
+      <p>No users found</p>
+    </div>
+  </div>
+</div>
